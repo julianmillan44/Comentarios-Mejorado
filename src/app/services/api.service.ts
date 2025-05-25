@@ -9,6 +9,7 @@ import { ApiResponse, PaginatedResponse } from '../models/api-response';
   providedIn: 'root'
 })
 export class ApiService {
+  [x: string]: any;
   private readonly baseUrl: string;
 
   constructor(private http: HttpClient) {
