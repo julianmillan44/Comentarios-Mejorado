@@ -1,1 +1,154 @@
-<p>about works!</p>
+<!-- About Section -->
+<section class="about">
+  <div class="container">
+    <div class="about-content">
+      <!-- About Header -->
+      <div class="about-header">
+        <h1 class="about-title">Sobre Mí</h1>
+        <p class="about-subtitle">Conoce mi historia y experiencia</p>
+      </div>
+
+      <!-- About Main Content -->
+      <div class="about-main">
+        <div class="about-text">
+          <div class="about-intro">
+            <h2 class="intro-title">¡Hola! Soy Julián Millán</h2>
+            <p class="intro-description">
+              Desarrollador Full Stack con más de 3 años de experiencia creando soluciones web
+              innovadoras. Mi pasión por la tecnología comenzó desde temprana edad, y desde entonces
+              he estado en constante aprendizaje para mantenerme actualizado con las últimas tendencias
+              y tecnologías del desarrollo web.
+            </p>
+          </div>
+
+          <div class="about-details">
+            <div class="detail-item">
+              <h3 class="detail-title">Mi Enfoque</h3>
+              <p class="detail-description">
+                Me especializo en crear aplicaciones web robustas y escalables, con especial
+                énfasis en la experiencia del usuario y el rendimiento. Creo firmemente en
+                escribir código limpio, mantenible y bien documentado.
+              </p>
+            </div>
+
+            <div class="detail-item">
+              <h3 class="detail-title">Filosofía de Trabajo</h3>
+              <p class="detail-description">
+                La colaboración, la comunicación clara y la mejora continua son pilares
+                fundamentales en mi forma de trabajar. Disfruto enfrentando nuevos desafíos
+                y aprendiendo tecnologías emergentes.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="about-image">
+          <div class="image-container">
+            <div class="image-placeholder">
+              <div class="code-snippet">
+                <div class="code-line" *ngFor="let line of personalCode">
+                  {{ line }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Experience Timeline -->
+<section class="experience">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Mi Experiencia</h2>
+      <p class="section-description">Trayectoria profesional y proyectos destacados</p>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-item" *ngFor="let exp of experiences; let i = index">
+        <div class="timeline-marker">
+          <div class="timeline-dot"></div>
+        </div>
+        <div class="timeline-content">
+          <div class="timeline-date">{{ exp.period }}</div>
+          <h3 class="timeline-title">{{ exp.title }}</h3>
+          <p class="timeline-company">{{ exp.company }}</p>
+          <p class="timeline-description">{{ exp.description }}</p>
+          <div class="timeline-skills">
+            <span class="skill-tag" *ngFor="let skill of exp.skills">{{ skill }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Skills & Technologies -->
+<section class="technologies">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Tecnologías & Herramientas</h2>
+      <p class="section-description">Las tecnologías con las que trabajo día a día</p>
+    </div>
+
+    <div class="tech-categories">
+      <div class="tech-category" *ngFor="let category of techCategories">
+        <h3 class="category-title">{{ category.name }}</h3>
+        <div class="tech-grid">
+          <div class="tech-item" *ngFor="let tech of category.technologies">
+            <div class="tech-icon">{{ tech.icon }}</div>
+            <span class="tech-name">{{ tech.name }}</span>
+            <div class="tech-level">
+              <div class="level-bar">
+                <div class="level-fill" [style.width.%]="tech.level"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Personal Interests -->
+<section class="interests">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Más Allá del Código</h2>
+      <p class="section-description">Mis intereses y actividades fuera del desarrollo</p>
+    </div>
+
+    <div class="interests-grid">
+      <div class="interest-card" *ngFor="let interest of personalInterests">
+        <div class="interest-icon">{{ interest.icon }}</div>
+        <h3 class="interest-title">{{ interest.title }}</h3>
+        <p class="interest-description">{{ interest.description }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="about-cta">
+  <div class="container">
+    <div class="cta-content">
+      <h2 class="cta-title">¿Quieres saber más?</h2>
+      <p class="cta-description">
+        Estoy siempre dispuesto a conversar sobre nuevos proyectos,
+        oportunidades de colaboración o simplemente charlar sobre tecnología.
+      </p>
+      <div class="cta-buttons">
+        <a routerLink="/contact" class="btn btn-primary">
+          <i class="icon icon-mail"></i>
+          Contáctame
+        </a>
+        <a routerLink="/projects" class="btn btn-secondary">
+          <i class="icon icon-code"></i>
+          Ver Proyectos
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
