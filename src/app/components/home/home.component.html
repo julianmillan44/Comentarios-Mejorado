@@ -1,1 +1,138 @@
-<p>home works!</p>
+<!-- Hero Section -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1 class="hero-title">
+          <span class="greeting">¡Hola! Soy</span>
+          <span class="name">Julian Millán</span>
+        </h1>
+        <h2 class="hero-subtitle">Desarrollador Full Stack</h2>
+        <p class="hero-description">
+          Apasionado por crear soluciones web innovadoras y experiencias de usuario excepcionales.
+          Especializado en Angular, NestJS, y tecnologías modernas de desarrollo.
+        </p>
+        <div class="hero-buttons">
+          <a routerLink="/projects" class="btn btn-primary">
+            <i class="icon icon-code"></i>
+            Ver Proyectos
+          </a>
+          <a routerLink="/contact" class="btn btn-secondary">
+            <i class="icon icon-mail"></i>
+            Contactar
+          </a>
+        </div>
+      </div>
+      <div class="hero-image">
+        <div class="profile-container">
+          <div class="profile-background"></div>
+          <div class="profile-image">
+            <div class="code-animation">
+              <span class="code-line" *ngFor="let line of codeLines; let i = index"
+                    [style.animation-delay]="i * 0.2 + 's'">
+                {{ line }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card" *ngFor="let stat of stats">
+        <div class="stat-icon">
+          <i class="icon" [class]="'icon-' + stat.icon"></i>
+        </div>
+        <div class="stat-content">
+          <h3 class="stat-number">{{ stat.number }}</h3>
+          <p class="stat-label">{{ stat.label }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Skills Preview -->
+<section class="skills-preview">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Tecnologías que domino</h2>
+      <p class="section-description">
+        Herramientas y tecnologías con las que trabajo diariamente
+      </p>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-category" *ngFor="let category of skillCategories">
+        <h3 class="category-title">{{ category.name }}</h3>
+        <div class="skills-list">
+          <span class="skill-item" *ngFor="let skill of category.skills">
+            {{ skill }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Recent Projects Preview -->
+<section class="recent-projects">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Proyectos Destacados</h2>
+      <p class="section-description">
+        Algunos de mis trabajos más recientes
+      </p>
+    </div>
+    <div class="projects-grid">
+      <div class="project-preview" *ngFor="let project of featuredProjects">
+        <div class="project-image">
+          <div class="project-overlay">
+            <div class="project-buttons">
+              <button class="btn-icon" (click)="viewProject(project.id)">
+                <i class="icon icon-eye"></i>
+              </button>
+              <a [href]="project.github" target="_blank" class="btn-icon">
+                <i class="icon icon-github"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="project-info">
+          <h3 class="project-title">{{ project.title }}</h3>
+          <p class="project-description">{{ project.description }}</p>
+          <div class="project-tags">
+            <span class="tag" *ngFor="let tag of project.tags">{{ tag }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section-footer">
+      <a routerLink="/projects" class="btn btn-outline">
+        Ver todos los proyectos
+        <i class="icon icon-arrow-right"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta">
+  <div class="container">
+    <div class="cta-content">
+      <h2 class="cta-title">¿Tienes un proyecto en mente?</h2>
+      <p class="cta-description">
+        Estoy disponible para nuevos desafíos y oportunidades de colaboración.
+        ¡Hablemos sobre tu próximo proyecto!
+      </p>
+      <a routerLink="/contact" class="btn btn-primary btn-large">
+        <i class="icon icon-mail"></i>
+        Trabajemos juntos
+      </a>
+    </div>
+  </div>
+</section>
