@@ -1,1 +1,86 @@
-<p>projects works!</p>
+<section class="projects-section">
+  <div class="container">
+    <!-- Header -->
+    <div class="section-header">
+      <h1 class="section-title">Mis Proyectos</h1>
+      <p class="section-subtitle">
+        Una colección de proyectos que demuestran mis habilidades y experiencia en desarrollo
+      </p>
+    </div>
+
+    <!-- Stats -->
+    <div class="projects-stats">
+      <div class="stat-card">
+        <div class="stat-number">{{ projects.length }}</div>
+        <div class="stat-label">Proyectos Totales</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">{{ getProjectsByStatus('completed').length }}</div>
+        <div class="stat-label">Completados</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">{{ getProjectsByStatus('in-progress').length }}</div>
+        <div class="stat-label">En Desarrollo</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">{{ getProjectsByStatus('planned').length }}</div>
+        <div class="stat-label">Planificados</div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="projects-filters">
+      <div class="filter-search">
+        <div class="search-box">
+          <i class="icon icon-search"></i>
+          <input
+            type="text"
+            placeholder="Buscar proyectos..."
+            (input)="onSearch($event)"
+            [value]="searchTerm">
+        </div>
+      </div>
+
+      <div class="filter-categories">
+        <button
+          *ngFor="let category of categories"
+          class="filter-btn"
+          [class.active]="selectedCategory === category.value"
+          (click)="filterByCategory(category.value)">
+          {{ category.label }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Projects Grid -->
+    <div class="projects-grid" *ngIf="filteredProjects.length > 0">
+      <app-project-card
+        *ngFor="let project of filteredProjects; trackBy: trackByProjectId"
+        [project]="project"
+        [showStats]="true"
+        (projectClick)="onProjectClick($event)"
+        (viewDetails)="onViewDetails($event)">
+      </app-project-card>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="filteredProjects.length === 0">
+      <div class="empty-icon">
+        <i class="icon icon-search"></i>
+      </div>
+      <h3>No se encontraron proyectos</h3>
+      <p>No hay proyectos que coincidan con los filtros seleccionados.</p>
+      <button class="btn btn-primary" (click)="selectedCategory = 'all'; searchTerm = ''; applyFilters()">
+        Ver todos los proyectos
+      </button>
+    </div>
+
+    <!-- Load More (if needed) -->
+    <div class="load-more" *ngIf="false">
+      <button class="btn btn-outline">
+        <i class="icon icon-refresh"></i>
+        Cargar más proyectos
+      </button>
+    </div>
+  </div>
+</section>
