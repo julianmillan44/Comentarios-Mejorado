@@ -1,1 +1,133 @@
-<p>comments works!</p>
+<section class="comments-section">
+  <!-- Comments Header -->
+  <div class="comments-header">
+    <h3 class="comments-title">
+      Comentarios ({{ getCommentsCount() }})
+    </h3>
+    <button class="btn btn-primary btn-sm"
+            (click)="toggleCommentForm()"
+            [class.active]="showCommentForm">
+      <i class="icon icon-plus" *ngIf="!showCommentForm"></i>
+      <i class="icon icon-minus" *ngIf="showCommentForm"></i>
+      {{ showCommentForm ? 'Cancelar' : 'Agregar comentario' }}
+    </button>
+  </div>
+
+  <!-- Comment Form -->
+  <div class="comment-form-container" *ngIf="showCommentForm">
+    <div class="form-header" *ngIf="replyingTo">
+      <span class="reply-indicator">
+        <i class="icon icon-reply"></i>
+        Respondiendo a comentario
+      </span>
+      <button class="btn btn-link btn-sm" (click)="cancelReply()">
+        Cancelar respuesta
+      </button>
+    </div>
+
+    <form class="comment-form" (ngSubmit)="onSubmitComment()" #commentForm="ngForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="author">Nombre *</label>
+          <input
+            type="text"
+            id="author"
+            name="author"
+            [(ngModel)]="newComment.author"
+            placeholder="Tu nombre"
+            required
+            [disabled]="isSubmitting">
+        </div>
+        <div class="form-group">
+          <label for="email">Email *</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            [(ngModel)]="newComment.email"
+            placeholder="tu@email.com"
+            required
+            [disabled]="isSubmitting">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="content">Comentario *</label>
+        <textarea
+          id="content"
+          name="content"
+          rows="4"
+          [(ngModel)]="newComment.content"
+          placeholder="Escribe tu comentario..."
+          required
+          [disabled]="isSubmitting"></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit"
+                class="btn btn-primary"
+                [disabled]="isSubmitting || !commentForm.valid">
+          <span *ngIf="!isSubmitting">
+            <i class="icon icon-send"></i>
+            {{ replyingTo ? 'Responder' : 'Publicar comentario' }}
+          </span>
+          <span *ngIf="isSubmitting">
+            <i class="icon icon-loading"></i>
+            Enviando...
+          </span>
+        </button>
+        <button type="button"
+                class="btn btn-outline"
+                (click)="toggleCommentForm()"
+                [disabled]="isSubmitting">
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-comments" *ngIf="comments.length === 0">
+    <div class="empty-icon">
+      <i class="icon icon-message-circle"></i>
+    </div>
+    <h4>Aún no hay comentarios</h4>
+    <p>¡Sé el primero en comentar! Comparte tu opinión sobre este contenido.</p>
+    <button class="btn btn-primary" (click)="showCommentForm = true">
+      <i class="icon icon-plus"></i>
+      Escribir primer comentario
+    </button>
+  </div>
+
+  <!-- Comments List -->
+  <div class="comments-list" *ngIf="comments.length > 0">
+    <div *ngFor="let comment of comments" class="comment-wrapper">
+      <app-comment-item
+        [comment]="comment"
+        [allowReplies]="allowReplies"
+        (replyClick)="onReply($event)"
+        (likeClick)="onLikeComment($event)">
+      </app-comment-item>
+
+      <!-- Replies -->
+      <div class="replies-container" *ngIf="comment.replies && comment.replies.length > 0">
+        <div *ngFor="let reply of comment.replies" class="reply-wrapper">
+          <app-comment-item
+            [comment]="reply"
+            [allowReplies]="false"
+            [isReply]="true"
+            (likeClick)="onLikeComment($event)">
+          </app-comment-item>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Load More Comments (for future pagination) -->
+  <div class="load-more-comments" *ngIf="false">
+    <button class="btn btn-outline">
+      <i class="icon icon-refresh"></i>
+      Cargar más comentarios
+    </button>
+  </div>
+</section>
