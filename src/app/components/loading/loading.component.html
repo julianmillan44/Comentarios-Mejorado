@@ -1,1 +1,6 @@
-<p>loading works!</p>
+<div class="loading-container" [class.loading-overlay]="isOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text" *ngIf="showText">
+    {{ loadingText }}<span class="loading-dots">...</span>
+  </div>
+</div>

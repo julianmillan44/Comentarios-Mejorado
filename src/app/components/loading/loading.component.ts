@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-loading',
@@ -7,5 +7,7 @@ import { Component } from '@angular/core';
   styleUrl: './loading.component.css'
 })
 export class LoadingComponent {
-
+  @Input() loadingText: string = 'Cargando';
+  @Input() showText: boolean = true;
+  @Input() isOverlay: boolean = false;
 }

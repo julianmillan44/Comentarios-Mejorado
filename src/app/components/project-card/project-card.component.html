@@ -1,1 +1,75 @@
-<p>project-card works!</p>
+<div class="project-card" (click)="onCardClick()">
+  <div class="project-image">
+    <img [src]="project.image || getDefaultImage()" [alt]="project.title" *ngIf="project.image; else noImage">
+    <ng-template #noImage>
+      <div class="default-image-content">
+        <i class="icon icon-code" style="font-size: 2rem; color: white;"></i>
+      </div>
+    </ng-template>
+
+    <div class="project-overlay">
+      <div class="project-buttons">
+        <button class="btn-icon" (click)="viewProject($event)" title="Ver detalles">
+          <i class="icon icon-eye"></i>
+        </button>
+        <a [href]="project.github" target="_blank" class="btn-icon"
+           (click)="$event.stopPropagation()" title="Ver código" *ngIf="project.github">
+          <i class="icon icon-github"></i>
+        </a>
+        <a [href]="project.demo" target="_blank" class="btn-icon"
+           (click)="$event.stopPropagation()" title="Ver demo" *ngIf="project.demo">
+          <i class="icon icon-external"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="project-info">
+    <div class="project-status" [class]="'status-' + project.status" *ngIf="project.status">
+      {{ getStatusText(project.status) }}
+    </div>
+
+    <h3 class="project-title">{{ project.title }}</h3>
+    <p class="project-description">{{ project.description }}</p>
+
+    <div class="project-meta" *ngIf="project.date || project.duration">
+      <div class="project-date" *ngIf="project.date">
+        <i class="icon icon-calendar"></i>
+        {{ formatDate(project.date) }}
+      </div>
+      <div class="project-duration" *ngIf="project.duration">
+        <i class="icon icon-clock"></i>
+        {{ project.duration }}
+      </div>
+    </div>
+
+    <div class="project-tags" *ngIf="project.tags && project.tags.length">
+      <span class="tag" *ngFor="let tag of project.tags">{{ tag }}</span>
+    </div>
+
+    <div class="project-footer">
+      <div class="project-links">
+        <button class="btn-small btn-primary-small" (click)="viewProject($event)">
+          <i class="icon icon-eye"></i>
+          Ver más
+        </button>
+        <a [href]="project.github" target="_blank" class="btn-small btn-outline-small"
+           (click)="$event.stopPropagation()" *ngIf="project.github">
+          <i class="icon icon-github"></i>
+          Código
+        </a>
+      </div>
+
+      <div class="project-stats" *ngIf="showStats">
+        <div class="stat-item" *ngIf="project.stars">
+          <i class="icon icon-star"></i>
+          {{ project.stars }}
+        </div>
+        <div class="stat-item" *ngIf="project.forks">
+          <i class="icon icon-fork"></i>
+          {{ project.forks }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
