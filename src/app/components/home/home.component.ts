@@ -38,7 +38,7 @@ export class HomeComponent implements OnInit {
       label: 'Horas de Código',
       icon: 'coffee'
     }
-  ];
+  ]
 
   skillCategories = [
     {
