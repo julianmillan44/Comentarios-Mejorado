@@ -1,17 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Project } from '../../models/project';
-
-export interface ProjectCardData extends Project {
-  status?: 'completed' | 'in-progress' | 'planned';
-  date?: Date;
-  duration?: string;
-  stars?: number;
-  forks?: number;
-  tags?: string[];
-  image?: string;
-  demo?: string;
-  github?: string;
-}
+import { ProjectCardData } from '../../models/project';
 
 @Component({
   selector: 'app-project-card',

@@ -1,19 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { Comment, CreateCommentDto } from '../../models/comment';
-
-export interface CommentWithReplies extends Comment {
-  replies?: CommentWithReplies[];
-  isReply?: boolean;
-  parentId?: number;
-  author?: string;
-  date?: Date;
-  avatar?: string;
-  likes?: number;
-}
-
-export interface NewCommentForm extends CreateCommentDto {
-  parentId?: number;
-}
+import { Comment, CreateCommentDto, CommentWithReplies, NewCommentForm } from '../../models/comment';
 
 @Component({
   selector: 'app-comments',

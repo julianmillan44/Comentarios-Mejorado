@@ -1,13 +1,13 @@
 <div class="comment-item" [class.reply-comment]="isReply">
   <div class="comment-avatar">
-    <img [src]="getAvatarUrl()" [alt]="comment.author" />
+    <img [src]="getAvatarUrl()" [alt]="comment.author || comment.name" />
   </div>
 
   <div class="comment-content">
     <div class="comment-header">
       <div class="comment-author">
-        <strong>{{ comment.author }}</strong>
-        <span class="comment-date">{{ formatDate(comment.date) }}</span>
+        <strong>{{ comment.author || comment.name }}</strong>
+        <span class="comment-date">{{ formatDate(comment.date || comment.createdAt) }}</span>
       </div>
       <div class="comment-actions">
         <button
@@ -15,7 +15,7 @@
           (click)="onLike()"
           [class.liked]="false">
           <i class="icon icon-heart"></i>
-          <span>{{ comment.likes }}</span>
+          <span>{{ comment.likes || 0 }}</span>
         </button>
         <button
           *ngIf="allowReplies"
@@ -28,7 +28,7 @@
     </div>
 
     <div class="comment-text">
-      {{ comment.content }}
+      {{ comment.message }}
     </div>
   </div>
 </div>

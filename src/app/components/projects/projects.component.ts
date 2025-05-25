@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Project } from '../project-card/project-card.component';
+import { ProjectCardData } from '../../models/project';
 
 @Component({
   selector: 'app-projects',
@@ -8,8 +8,8 @@ import { Project } from '../project-card/project-card.component';
   styleUrl: './projects.component.css'
 })
 export class ProjectsComponent implements OnInit {
-  projects: Project[] = [];
-  filteredProjects: Project[] = [];
+  projects: ProjectCardData[] = [];
+  filteredProjects: ProjectCardData[] = [];
   selectedCategory: string = 'all';
   searchTerm: string = '';
 
@@ -33,6 +33,15 @@ export class ProjectsComponent implements OnInit {
         id: 1,
         title: 'E-commerce Platform',
         description: 'Plataforma completa de comercio electrónico con carrito de compras, sistema de pagos y panel de administración.',
+        shortDescription: 'Plataforma completa de comercio electrónico',
+        technologies: ['Angular', 'Node.js', 'MongoDB', 'Stripe'],
+        imageUrl: '/assets/images/ecommerce-project.jpg',
+        githubUrl: 'https://github.com/tu-usuario/ecommerce-platform',
+        demoUrl: 'https://demo-ecommerce.com',
+        featured: true,
+        createdAt: new Date('2024-01-15'),
+        updatedAt: new Date('2024-01-15'),
+        // Extended properties
         image: '/assets/images/ecommerce-project.jpg',
         tags: ['Angular', 'Node.js', 'MongoDB', 'Stripe'],
         github: 'https://github.com/tu-usuario/ecommerce-platform',
@@ -47,6 +56,15 @@ export class ProjectsComponent implements OnInit {
         id: 2,
         title: 'Task Management App',
         description: 'Aplicación de gestión de tareas con funcionalidades de colaboración en tiempo real y notificaciones.',
+        shortDescription: 'App de gestión de tareas colaborativas',
+        technologies: ['React', 'Firebase', 'Material-UI'],
+        imageUrl: '/assets/images/task-app.jpg',
+        githubUrl: 'https://github.com/tu-usuario/task-manager',
+        demoUrl: 'https://task-manager-demo.com',
+        featured: false,
+        createdAt: new Date('2024-03-10'),
+        updatedAt: new Date('2024-03-10'),
+        // Extended properties
         image: '/assets/images/task-app.jpg',
         tags: ['React', 'Firebase', 'Material-UI'],
         github: 'https://github.com/tu-usuario/task-manager',
@@ -61,6 +79,13 @@ export class ProjectsComponent implements OnInit {
         id: 3,
         title: 'Weather Dashboard',
         description: 'Dashboard meteorológico con mapas interactivos, pronósticos extendidos y alertas personalizadas.',
+        shortDescription: 'Dashboard meteorológico interactivo',
+        technologies: ['Vue.js', 'Chart.js', 'OpenWeather API'],
+        githubUrl: 'https://github.com/tu-usuario/weather-dashboard',
+        featured: true,
+        createdAt: new Date('2023-11-20'),
+        updatedAt: new Date('2023-11-20'),
+        // Extended properties
         tags: ['Vue.js', 'Chart.js', 'OpenWeather API'],
         github: 'https://github.com/tu-usuario/weather-dashboard',
         status: 'completed',
@@ -73,6 +98,12 @@ export class ProjectsComponent implements OnInit {
         id: 4,
         title: 'Social Media Analytics',
         description: 'Herramienta de análisis de redes sociales con métricas avanzadas y reportes automatizados.',
+        shortDescription: 'Herramienta de análisis de redes sociales',
+        technologies: ['Python', 'Django', 'PostgreSQL', 'D3.js'],
+        featured: false,
+        createdAt: new Date('2024-06-01'),
+        updatedAt: new Date('2024-06-01'),
+        // Extended properties
         tags: ['Python', 'Django', 'PostgreSQL', 'D3.js'],
         status: 'planned',
         date: new Date('2024-06-01'),
@@ -81,12 +112,12 @@ export class ProjectsComponent implements OnInit {
     ];
   }
 
-  onProjectClick(project: Project): void {
+  onProjectClick(project: ProjectCardData): void {
     console.log('Proyecto seleccionado:', project);
     // Aquí podrías navegar a una página de detalles del proyecto
   }
 
-  onViewDetails(project: Project): void {
+  onViewDetails(project: ProjectCardData): void {
     console.log('Ver detalles del proyecto:', project);
     // Aquí podrías abrir un modal o navegar a detalles
   }
@@ -105,22 +136,22 @@ export class ProjectsComponent implements OnInit {
   public applyFilters(): void {
     this.filteredProjects = this.projects.filter(project => {
       const matchesCategory = this.selectedCategory === 'all' ||
-        project.tags.some(tag => tag.toLowerCase().includes(this.selectedCategory));
+        project.tags?.some((tag: string) => tag.toLowerCase().includes(this.selectedCategory));
 
       const matchesSearch = this.searchTerm === '' ||
         project.title.toLowerCase().includes(this.searchTerm) ||
         project.description.toLowerCase().includes(this.searchTerm) ||
-        project.tags.some(tag => tag.toLowerCase().includes(this.searchTerm));
+        project.tags?.some((tag: string) => tag.toLowerCase().includes(this.searchTerm));
 
       return matchesCategory && matchesSearch;
     });
   }
 
-  getProjectsByStatus(status: string): Project[] {
+  getProjectsByStatus(status: string): ProjectCardData[] {
     return this.projects.filter(project => project.status === status);
   }
 
-  trackByProjectId(index: number, project: Project): number {
+  trackByProjectId(index: number, project: ProjectCardData): number {
     return project.id;
   }
 }
