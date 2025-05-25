@@ -1,13 +1,13 @@
 <div class="project-card" (click)="onCardClick()">
   <!-- Project Image -->
   <div class="project-image">
-    <img [src]="project.image || '/assets/images/project-placeholder.jpg'"
+    <img [src]="image"
          [alt]="project.title"
          onerror="this.src='/assets/images/project-placeholder.jpg'">
     <div class="project-overlay">
       <div class="overlay-actions">
-        <a *ngIf="project.demo"
-           [href]="project.demo"
+        <a *ngIf="demo"
+           [href]="demo"
            target="_blank"
            rel="noopener noreferrer"
            class="action-btn btn-demo"
@@ -15,8 +15,8 @@
            title="Ver Demo">
           <i class="icon icon-external-link"></i>
         </a>
-        <a *ngIf="project.github"
-           [href]="project.github"
+        <a *ngIf="github"
+           [href]="github"
            target="_blank"
            rel="noopener noreferrer"
            class="action-btn btn-github"
@@ -31,7 +31,7 @@
   <!-- Project Content -->
   <div class="project-content">
     <!-- Status Badge -->
-    <div class="project-status">
+    <div class="project-status" *ngIf="project.status">
       <span class="status-badge" [class]="getStatusClass()">
         {{ getStatusLabel() }}
       </span>
@@ -40,7 +40,9 @@
     <!-- Project Info -->
     <div class="project-info">
       <h3 class="project-title">{{ project.title }}</h3>
-      <p class="project-description">{{ project.description }}</p>
+      <p class="project-description">
+        {{ project.shortDescription || project.description }}
+      </p>
     </div>
 
     <!-- Project Meta -->
@@ -49,7 +51,7 @@
         <i class="icon icon-calendar"></i>
         <span>{{ formatDate(project.date) }}</span>
       </div>
-      <div class="meta-item">
+      <div class="meta-item" *ngIf="project.duration">
         <i class="icon icon-clock"></i>
         <span>{{ project.duration }}</span>
       </div>
@@ -57,7 +59,7 @@
 
     <!-- Project Tags -->
     <div class="project-tags">
-      <span *ngFor="let tag of project.tags" class="tag">
+      <span *ngFor="let tag of tags" class="tag">
         {{ tag }}
       </span>
     </div>

@@ -1,11 +1,5 @@
 import { Component } from '@angular/core';
-
-interface ContactForm {
-  name: string;
-  email: string;
-  subject: string;
-  message: string;
-}
+import { CreateContactDto } from '../../models/contact';
 
 interface ContactInfo {
   icon: string;
@@ -28,7 +22,7 @@ interface SocialLink {
   styleUrl: './contact.component.css'
 })
 export class ContactComponent {
-  contactForm: ContactForm = {
+  contactForm: CreateContactDto = {
     name: '',
     email: '',
     subject: '',
@@ -163,7 +157,7 @@ export class ContactComponent {
     };
   }
 
-  onInputChange(field: keyof ContactForm, event: Event): void {
+  onInputChange(field: keyof CreateContactDto, event: Event): void {
     const target = event.target as HTMLInputElement | HTMLTextAreaElement;
     this.contactForm[field] = target.value;
   }

@@ -1,22 +1,17 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Comment, CreateCommentDto } from '../../models/comment';
 
-export interface Comment {
-  id: number;
-  author: string;
-  email: string;
-  content: string;
-  date: Date;
-  avatar?: string;
-  likes: number;
-  replies?: Comment[];
+export interface CommentWithReplies extends Comment {
+  replies?: CommentWithReplies[];
   isReply?: boolean;
   parentId?: number;
+  author?: string;
+  date?: Date;
+  avatar?: string;
+  likes?: number;
 }
 
-export interface NewComment {
-  author: string;
-  email: string;
-  content: string;
+export interface NewCommentForm extends CreateCommentDto {
   parentId?: number;
 }
 
@@ -29,13 +24,13 @@ export interface NewComment {
 export class CommentsComponent implements OnInit {
   @Input() postId: number = 0;
   @Input() allowReplies: boolean = true;
-  @Output() commentAdded = new EventEmitter<Comment>();
+  @Output() commentAdded = new EventEmitter<CommentWithReplies>();
 
-  comments: Comment[] = [];
-  newComment: NewComment = {
-    author: '',
+  comments: CommentWithReplies[] = [];
+  newComment: NewCommentForm = {
+    name: '',
     email: '',
-    content: ''
+    message: ''
   };
 
   isSubmitting = false;
@@ -51,18 +46,26 @@ export class CommentsComponent implements OnInit {
     this.comments = [
       {
         id: 1,
-        author: 'María García',
+        name: 'María García',
         email: 'maria@email.com',
-        content: '¡Excelente artículo! Me ha ayudado mucho a entender mejor el tema. ¿Podrías profundizar más en la parte de implementación?',
+        message: '¡Excelente artículo! Me ha ayudado mucho a entender mejor el tema. ¿Podrías profundizar más en la parte de implementación?',
+        approved: true,
+        createdAt: new Date('2024-01-15T10:30:00'),
+        updatedAt: new Date('2024-01-15T10:30:00'),
+        author: 'María García',
         date: new Date('2024-01-15T10:30:00'),
         avatar: '/assets/images/avatar-1.jpg',
         likes: 12,
         replies: [
           {
             id: 5,
-            author: 'Carlos López',
+            name: 'Carlos López',
             email: 'carlos@email.com',
-            content: 'Estoy de acuerdo con María. Sería genial ver ejemplos más detallados.',
+            message: 'Estoy de acuerdo con María. Sería genial ver ejemplos más detallados.',
+            approved: true,
+            createdAt: new Date('2024-01-15T14:20:00'),
+            updatedAt: new Date('2024-01-15T14:20:00'),
+            author: 'Carlos López',
             date: new Date('2024-01-15T14:20:00'),
             avatar: '/assets/images/avatar-2.jpg',
             likes: 3,
@@ -73,18 +76,26 @@ export class CommentsComponent implements OnInit {
       },
       {
         id: 2,
-        author: 'Ana Rodríguez',
+        name: 'Ana Rodríguez',
         email: 'ana@email.com',
-        content: 'Muy útil la información. He estado buscando algo así durante semanas. ¡Gracias por compartir!',
+        message: 'Muy útil la información. He estado buscando algo así durante semanas. ¡Gracias por compartir!',
+        approved: true,
+        createdAt: new Date('2024-01-16T09:15:00'),
+        updatedAt: new Date('2024-01-16T09:15:00'),
+        author: 'Ana Rodríguez',
         date: new Date('2024-01-16T09:15:00'),
         avatar: '/assets/images/avatar-3.jpg',
         likes: 8
       },
       {
         id: 3,
-        author: 'David Martín',
+        name: 'David Martín',
         email: 'david@email.com',
-        content: 'Interesante enfoque. Aunque creo que hay algunas alternativas que también valdría la pena considerar.',
+        message: 'Interesante enfoque. Aunque creo que hay algunas alternativas que también valdría la pena considerar.',
+        approved: true,
+        createdAt: new Date('2024-01-17T16:45:00'),
+        updatedAt: new Date('2024-01-17T16:45:00'),
+        author: 'David Martín',
         date: new Date('2024-01-17T16:45:00'),
         avatar: '/assets/images/avatar-4.jpg',
         likes: 5
@@ -108,11 +119,15 @@ export class CommentsComponent implements OnInit {
 
     // Simulación de envío
     setTimeout(() => {
-      const comment: Comment = {
+      const comment: CommentWithReplies = {
         id: Date.now(),
-        author: this.newComment.author,
+        name: this.newComment.name,
         email: this.newComment.email,
-        content: this.newComment.content,
+        message: this.newComment.message,
+        approved: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        author: this.newComment.name,
         date: new Date(),
         likes: 0,
         parentId: this.newComment.parentId
@@ -149,12 +164,12 @@ export class CommentsComponent implements OnInit {
 
   onLikeComment(commentId: number): void {
     const comment = this.findCommentById(commentId);
-    if (comment) {
+    if (comment && comment.likes !== undefined) {
       comment.likes++;
     }
   }
 
-  findCommentById(id: number): Comment | null {
+  findCommentById(id: number): CommentWithReplies | null {
     for (const comment of this.comments) {
       if (comment.id === id) {
         return comment;
@@ -171,9 +186,9 @@ export class CommentsComponent implements OnInit {
   }
 
   validateComment(): boolean {
-    const { author, email, content } = this.newComment;
+    const { name, email, message } = this.newComment;
 
-    if (!author.trim()) {
+    if (!name.trim()) {
       alert('Por favor, ingresa tu nombre.');
       return false;
     }
@@ -183,7 +198,7 @@ export class CommentsComponent implements OnInit {
       return false;
     }
 
-    if (!content.trim()) {
+    if (!message.trim()) {
       alert('Por favor, escribe tu comentario.');
       return false;
     }
@@ -198,9 +213,9 @@ export class CommentsComponent implements OnInit {
 
   resetForm(): void {
     this.newComment = {
-      author: '',
+      name: '',
       email: '',
-      content: '',
+      message: '',
       parentId: undefined
     };
   }

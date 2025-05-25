@@ -119,4 +119,8 @@ export class ProjectsComponent implements OnInit {
   getProjectsByStatus(status: string): Project[] {
     return this.projects.filter(project => project.status === status);
   }
+
+  trackByProjectId(index: number, project: Project): number {
+    return project.id;
+  }
 }

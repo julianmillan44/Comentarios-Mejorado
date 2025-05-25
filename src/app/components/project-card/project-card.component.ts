@@ -1,18 +1,16 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Project } from '../../models/project';
 
-export interface Project {
-  id: number;
-  title: string;
-  description: string;
-  image?: string;
-  tags: string[];
-  github?: string;
-  demo?: string;
-  status: 'completed' | 'in-progress' | 'planned';
-  date: Date;
-  duration: string;
+export interface ProjectCardData extends Project {
+  status?: 'completed' | 'in-progress' | 'planned';
+  date?: Date;
+  duration?: string;
   stars?: number;
   forks?: number;
+  tags?: string[];
+  image?: string;
+  demo?: string;
+  github?: string;
 }
 
 @Component({
@@ -22,10 +20,10 @@ export interface Project {
   styleUrl: './project-card.component.css'
 })
 export class ProjectCardComponent {
-  @Input() project!: Project;
+  @Input() project!: ProjectCardData;
   @Input() showStats: boolean = true;
-  @Output() projectClick = new EventEmitter<Project>();
-  @Output() viewDetails = new EventEmitter<Project>();
+  @Output() projectClick = new EventEmitter<ProjectCardData>();
+  @Output() viewDetails = new EventEmitter<ProjectCardData>();
 
   onCardClick(): void {
     this.projectClick.emit(this.project);
@@ -66,10 +64,34 @@ export class ProjectCardComponent {
     }
   }
 
-  formatDate(date: Date): string {
+  formatDate(date?: Date): string {
+    if (!date) {
+      return this.project.createdAt.toLocaleDateString('es-ES', {
+        year: 'numeric',
+        month: 'long'
+      });
+    }
+
     return date.toLocaleDateString('es-ES', {
       year: 'numeric',
       month: 'long'
     });
+  }
+
+  // Getters para compatibilidad con el template existente
+  get tags(): string[] {
+    return this.project.tags || this.project.technologies || [];
+  }
+
+  get image(): string {
+    return this.project.image || this.project.imageUrl || '/assets/images/project-placeholder.jpg';
+  }
+
+  get demo(): string | undefined {
+    return this.project.demo || this.project.demoUrl;
+  }
+
+  get github(): string | undefined {
+    return this.project.github || this.project.githubUrl;
   }
 }
