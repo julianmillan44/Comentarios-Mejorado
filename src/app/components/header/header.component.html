@@ -1,0 +1,60 @@
+<header class="header">
+  <div class="container">
+    <div class="header-content">
+      <!-- Logo/Brand -->
+      <div class="brand" (click)="navigateTo('/')">
+        <h1 class="brand-title">Mi Portafolio</h1>
+        <span class="brand-subtitle">Desarrollador Full Stack</span>
+      </div>
+
+      <!-- Navigation Desktop -->
+      <nav class="nav-desktop">
+        <ul class="nav-list">
+          <li class="nav-item" *ngFor="let item of navigationItems">
+            <a
+              [routerLink]="item.path"
+              class="nav-link"
+              [class.active]="isActiveRoute(item.path)"
+              (click)="closeMenu()">
+              <i class="icon" [class]="'icon-' + item.icon"></i>
+              <span>{{ item.label }}</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Mobile Menu Button -->
+      <button
+        class="mobile-menu-btn"
+        (click)="toggleMenu()"
+        [class.active]="isMenuOpen">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <nav class="nav-mobile" [class.open]="isMenuOpen">
+      <ul class="nav-mobile-list">
+        <li class="nav-mobile-item" *ngFor="let item of navigationItems">
+          <a
+            [routerLink]="item.path"
+            class="nav-mobile-link"
+            [class.active]="isActiveRoute(item.path)"
+            (click)="navigateTo(item.path)">
+            <i class="icon" [class]="'icon-' + item.icon"></i>
+            <span>{{ item.label }}</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- Overlay for mobile menu -->
+  <div
+    class="mobile-overlay"
+    [class.active]="isMenuOpen"
+    (click)="closeMenu()">
+  </div>
+</header>

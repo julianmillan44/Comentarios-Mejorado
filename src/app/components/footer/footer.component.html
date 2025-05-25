@@ -1,0 +1,87 @@
+<footer class="footer">
+  <div class="container">
+    <!-- Main Footer Content -->
+    <div class="footer-content">
+      <!-- About Section -->
+      <div class="footer-section">
+        <h3 class="footer-title">Sobre Mí</h3>
+        <p class="footer-description">
+          Desarrollador Full Stack apasionado por crear soluciones web innovadoras
+          y experiencias de usuario excepcionales. Especializado en tecnologías
+          modernas como Angular, NestJS y Docker.
+        </p>
+        <div class="social-links">
+          <a
+            *ngFor="let social of socialLinks"
+            [href]="social.url"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="social-link"
+            [style.--social-color]="social.color"
+            [title]="social.name">
+            <i class="social-icon" [class]="'icon-' + social.icon"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="footer-section">
+        <h3 class="footer-title">Enlaces Rápidos</h3>
+        <ul class="quick-links">
+          <li *ngFor="let link of quickLinks">
+            <a [routerLink]="link.path" class="quick-link">
+              {{ link.label }}
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Skills -->
+      <div class="footer-section">
+        <h3 class="footer-title">Tecnologías</h3>
+        <div class="skills-container">
+          <span
+            *ngFor="let skill of skills"
+            class="skill-tag">
+            {{ skill }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="footer-section">
+        <h3 class="footer-title">Contacto</h3>
+        <div class="contact-info">
+          <div class="contact-item">
+            <i class="icon icon-mail"></i>
+            <span>tu-emailejemplo.com</span>
+          </div>
+          <div class="contact-item">
+            <i class="icon icon-map-pin"></i>
+            <span>Tu Ciudad, País</span>
+          </div>
+          <div class="contact-item">
+            <i class="icon icon-phone"></i>
+            <span>+1 (555) 123-4567</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Bottom -->
+    <div class="footer-bottom">
+      <div class="footer-bottom-content">
+        <p class="copyright">
+          © {{ currentYear }} Mi Portafolio. Todos los derechos reservados.
+        </p>
+        <div class="footer-bottom-links">
+          <a href="#" class="footer-bottom-link">Política de Privacidad</a>
+          <a href="#" class="footer-bottom-link">Términos de Uso</a>
+          <button class="scroll-top-btn" (click)="scrollToTop()" title="Volver arriba">
+            <i class="icon icon-chevron-up"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
