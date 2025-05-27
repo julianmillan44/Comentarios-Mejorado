@@ -11,8 +11,8 @@ export class CommentItemComponent {
   @Input() comment!: Comment;
   @Input() allowReplies: boolean = true;
   @Input() isReply: boolean = false;
-  @Output() replyClick = new EventEmitter<number>();
-  @Output() likeClick = new EventEmitter<number>();
+  @Output() replyClick = new EventEmitter<string>();
+  @Output() likeClick = new EventEmitter<string>();
 
   onReply(): void {
     if (this.allowReplies && this.comment?.id) {

@@ -9,11 +9,11 @@ import { ApiResponse, PaginatedResponse } from '../models/api-response';
   providedIn: 'root'
 })
 export class ApiService {
-  [x: string]: any;
   private readonly baseUrl: string;
 
   constructor(private http: HttpClient) {
-    this.baseUrl = environment.production ? '/api' : 'http://localhost:3000';
+    // Configuración correcta para Docker
+    this.baseUrl = environment.production ? '/api' : 'http://localhost:3001/api';
   }
 
   /**
@@ -26,11 +26,8 @@ export class ApiService {
       params: httpParams
     };
 
-    return this.http.get<ApiResponse<T>>(`${this.baseUrl}${endpoint}`, options)
-      .pipe(
-        map(response => this.handleResponse(response)),
-        catchError(this.handleError)
-      );
+    return this.http.get<T>(`${this.baseUrl}/${endpoint}`, options)
+      .pipe(catchError(this.handleError));
   }
 
   /**
@@ -41,11 +38,8 @@ export class ApiService {
       headers: this.getHeaders()
     };
 
-    return this.http.post<ApiResponse<T>>(`${this.baseUrl}${endpoint}`, data, options)
-      .pipe(
-        map(response => this.handleResponse(response)),
-        catchError(this.handleError)
-      );
+    return this.http.post<T>(`${this.baseUrl}/${endpoint}`, data, options)
+      .pipe(catchError(this.handleError));
   }
 
   /**
@@ -56,11 +50,20 @@ export class ApiService {
       headers: this.getHeaders()
     };
 
-    return this.http.put<ApiResponse<T>>(`${this.baseUrl}${endpoint}`, data, options)
-      .pipe(
-        map(response => this.handleResponse(response)),
-        catchError(this.handleError)
-      );
+    return this.http.put<T>(`${this.baseUrl}/${endpoint}`, data, options)
+      .pipe(catchError(this.handleError));
+  }
+
+  /**
+   * PATCH request
+   */
+  patch<T>(endpoint: string, data: any): Observable<T> {
+    const options = {
+      headers: this.getHeaders()
+    };
+
+    return this.http.patch<T>(`${this.baseUrl}/${endpoint}`, data, options)
+      .pipe(catchError(this.handleError));
   }
 
   /**
@@ -71,11 +74,8 @@ export class ApiService {
       headers: this.getHeaders()
     };
 
-    return this.http.delete<ApiResponse<T>>(`${this.baseUrl}${endpoint}`, options)
-      .pipe(
-        map(response => this.handleResponse(response)),
-        catchError(this.handleError)
-      );
+    return this.http.delete<T>(`${this.baseUrl}/${endpoint}`, options)
+      .pipe(catchError(this.handleError));
   }
 
   /**
@@ -89,7 +89,7 @@ export class ApiService {
       params: httpParams
     };
 
-    return this.http.get<PaginatedResponse<T>>(`${this.baseUrl}${endpoint}`, options)
+    return this.http.get<PaginatedResponse<T>>(`${this.baseUrl}/${endpoint}`, options)
       .pipe(catchError(this.handleError));
   }
 
@@ -111,11 +111,8 @@ export class ApiService {
       'Authorization': this.getAuthToken() || ''
     });
 
-    return this.http.post<ApiResponse<T>>(`${this.baseUrl}${endpoint}`, formData, { headers })
-      .pipe(
-        map(response => this.handleResponse(response)),
-        catchError(this.handleError)
-      );
+    return this.http.post<T>(`${this.baseUrl}/${endpoint}`, formData, { headers })
+      .pipe(catchError(this.handleError));
   }
 
   /**
@@ -140,7 +137,8 @@ export class ApiService {
    */
   private getHeaders(): HttpHeaders {
     const headers: any = {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
     };
 
     const token = this.getAuthToken();
@@ -160,21 +158,12 @@ export class ApiService {
   }
 
   /**
-   * Handle successful API response
-   */
-  private handleResponse<T>(response: ApiResponse<T>): T {
-    if (response.success) {
-      return response.data as T;
-    } else {
-      throw new Error(response.message || 'Error en la respuesta del servidor');
-    }
-  }
-
-  /**
    * Handle HTTP errors
    */
   private handleError = (error: HttpErrorResponse): Observable<never> => {
     let errorMessage = 'Ha ocurrido un error inesperado';
+
+    console.error('Full HTTP Error:', error);
 
     if (error.error instanceof ErrorEvent) {
       // Client-side error
@@ -182,7 +171,7 @@ export class ApiService {
     } else {
       // Server-side error
       if (error.status === 0) {
-        errorMessage = 'No se puede conectar con el servidor. Verifica tu conexión a internet.';
+        errorMessage = 'No se puede conectar con el servidor. Verifica que el backend esté ejecutándose.';
       } else if (error.status >= 400 && error.status < 500) {
         errorMessage = error.error?.message || `Error del cliente (${error.status})`;
       } else if (error.status >= 500) {
@@ -190,7 +179,7 @@ export class ApiService {
       }
     }
 
-    console.error('API Error:', error);
+    console.error('API Error:', errorMessage);
     return throwError(() => new Error(errorMessage));
   };
 }

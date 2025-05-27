@@ -1,133 +1,120 @@
-<section class="comments-section">
-  <!-- Comments Header -->
+<div class="comments-container">
   <div class="comments-header">
-    <h3 class="comments-title">
-      Comentarios ({{ getCommentsCount() }})
-    </h3>
-    <button class="btn btn-primary btn-sm"
-            (click)="toggleCommentForm()"
-            [class.active]="showCommentForm">
-      <i class="icon icon-plus" *ngIf="!showCommentForm"></i>
-      <i class="icon icon-minus" *ngIf="showCommentForm"></i>
-      {{ showCommentForm ? 'Cancelar' : 'Agregar comentario' }}
-    </button>
+    <h2>Comentarios</h2>
+    <p>Comparte tu opinión sobre mi trabajo</p>
   </div>
 
-  <!-- Comment Form -->
-  <div class="comment-form-container" *ngIf="showCommentForm">
-    <div class="form-header" *ngIf="replyingTo">
-      <span class="reply-indicator">
-        <i class="icon icon-reply"></i>
-        Respondiendo a comentario
-      </span>
-      <button class="btn btn-link btn-sm" (click)="cancelReply()">
-        Cancelar respuesta
-      </button>
-    </div>
-
-    <form class="comment-form" (ngSubmit)="onSubmitComment()" #commentForm="ngForm">
-      <div class="form-row">
-        <div class="form-group">
-          <label for="name">Nombre *</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            [(ngModel)]="newComment.name"
-            placeholder="Tu nombre"
-            required
-            [disabled]="isSubmitting">
-        </div>
-        <div class="form-group">
-          <label for="email">Email *</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            [(ngModel)]="newComment.email"
-            placeholder="tu@email.com"
-            required
-            [disabled]="isSubmitting">
+  <!-- Formulario para nuevo comentario -->
+  <div class="comment-form-section">
+    <h3>Deja un comentario</h3>
+    <form [formGroup]="commentForm" (ngSubmit)="onSubmit()" class="comment-form">
+      <div class="form-group">
+        <label for="name">Nombre *</label>
+        <input
+          type="text"
+          id="name"
+          formControlName="name"
+          class="form-control"
+          [class.invalid]="name?.invalid && name?.touched"
+          placeholder="Tu nombre completo"
+        >
+        <div *ngIf="name?.invalid && name?.touched" class="error-message">
+          <span *ngIf="name?.errors?.['required']">El nombre es requerido</span>
+          <span *ngIf="name?.errors?.['minlength']">El nombre debe tener al menos 2 caracteres</span>
         </div>
       </div>
 
       <div class="form-group">
-        <label for="message">Comentario *</label>
-        <textarea
-          id="message"
-          name="message"
-          rows="4"
-          [(ngModel)]="newComment.message"
-          placeholder="Escribe tu comentario..."
-          required
-          [disabled]="isSubmitting"></textarea>
+        <label for="email">Email *</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          class="form-control"
+          [class.invalid]="email?.invalid && email?.touched"
+          placeholder="tu@email.com"
+        >
+        <div *ngIf="email?.invalid && email?.touched" class="error-message">
+          <span *ngIf="email?.errors?.['required']">El email es requerido</span>
+          <span *ngIf="email?.errors?.['email']">Ingresa un email válido</span>
+        </div>
       </div>
 
-      <div class="form-actions">
-        <button type="submit"
-                class="btn btn-primary"
-                [disabled]="isSubmitting || !commentForm.valid">
-          <span *ngIf="!isSubmitting">
-            <i class="icon icon-send"></i>
-            {{ replyingTo ? 'Responder' : 'Publicar comentario' }}
-          </span>
-          <span *ngIf="isSubmitting">
-            <i class="icon icon-loading"></i>
-            Enviando...
-          </span>
-        </button>
-        <button type="button"
-                class="btn btn-outline"
-                (click)="toggleCommentForm()"
-                [disabled]="isSubmitting">
-          Cancelar
-        </button>
+      <div class="form-group">
+        <label for="message">Mensaje *</label>
+        <textarea
+          id="message"
+          formControlName="message"
+          class="form-control"
+          [class.invalid]="message?.invalid && message?.touched"
+          rows="4"
+          placeholder="Escribe tu comentario aquí..."
+        ></textarea>
+        <div *ngIf="message?.invalid && message?.touched" class="error-message">
+          <span *ngIf="message?.errors?.['required']">El mensaje es requerido</span>
+          <span *ngIf="message?.errors?.['minlength']">El mensaje debe tener al menos 10 caracteres</span>
+        </div>
       </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="commentForm.invalid || isSubmitting"
+        [class.loading]="isSubmitting"
+      >
+        <span *ngIf="!isSubmitting">Enviar Comentario</span>
+        <span *ngIf="isSubmitting">Enviando...</span>
+      </button>
     </form>
   </div>
 
-  <!-- Empty State -->
-  <div class="empty-comments" *ngIf="comments.length === 0">
-    <div class="empty-icon">
-      <i class="icon icon-message-circle"></i>
+  <!-- Lista de comentarios -->
+  <div class="comments-list">
+    <h3>Comentarios ({{ comments.length }})</h3>
+
+    <div *ngIf="isLoading" class="loading-state">
+      <div class="spinner"></div>
+      <p>Cargando comentarios...</p>
     </div>
-    <h4>Aún no hay comentarios</h4>
-    <p>¡Sé el primero en comentar! Comparte tu opinión sobre este contenido.</p>
-    <button class="btn btn-primary" (click)="showCommentForm = true">
-      <i class="icon icon-plus"></i>
-      Escribir primer comentario
-    </button>
-  </div>
 
-  <!-- Comments List -->
-  <div class="comments-list" *ngIf="comments.length > 0">
-    <div *ngFor="let comment of comments" class="comment-wrapper">
-      <app-comment-item
-        [comment]="comment"
-        [allowReplies]="allowReplies"
-        (replyClick)="onReply($event)"
-        (likeClick)="onLikeComment($event)">
-      </app-comment-item>
+    <div *ngIf="!isLoading && comments.length === 0" class="empty-state">
+      <p>No hay comentarios aún. ¡Sé el primero en comentar!</p>
+    </div>
 
-      <!-- Replies -->
-      <div class="replies-container" *ngIf="comment.replies && comment.replies.length > 0">
-        <div *ngFor="let reply of comment.replies" class="reply-wrapper">
-          <app-comment-item
-            [comment]="reply"
-            [allowReplies]="false"
-            [isReply]="true"
-            (likeClick)="onLikeComment($event)">
-          </app-comment-item>
+    <div *ngIf="!isLoading && comments.length > 0" class="comments-grid">
+      <div *ngFor="let comment of comments" class="comment-card">
+        <div class="comment-header">
+          <div class="comment-author">
+            <div class="avatar">{{ comment.name.charAt(0).toUpperCase() }}</div>
+            <div class="author-info">
+              <h4>{{ comment.name }}</h4>
+              <span class="comment-date">{{ comment.createdAt | date:'medium' }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="comment-content">
+          <p>{{ comment.message }}</p>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Load More Comments (for future pagination) -->
-  <div class="load-more-comments" *ngIf="false">
-    <button class="btn btn-outline">
-      <i class="icon icon-refresh"></i>
-      Cargar más comentarios
-    </button>
+    <!-- Paginación -->
+    <div *ngIf="totalPages > 1" class="pagination">
+      <button
+        (click)="previousPage()"
+        [disabled]="currentPage === 1"
+        class="btn btn-secondary"
+      >
+        Anterior
+      </button>
+      <span class="page-info">Página {{ currentPage }} de {{ totalPages }}</span>
+      <button
+        (click)="nextPage()"
+        [disabled]="currentPage === totalPages"
+        class="btn btn-secondary"
+      >
+        Siguiente
+      </button>
+    </div>
   </div>
-</section>
+</div>

@@ -14,12 +14,12 @@ export class CommentsService {
 
   // Obtener todos los comentarios aprobados con paginación
   getComments(page: number = 1, limit: number = 10): Observable<PaginatedResponse<Comment>> {
-    return this.apiService.get<PaginatedResponse<Comment>>(`${this.endpoint}?page=${page}&limit=${limit}&approved=true`);
+    return this.apiService.getPaginated<Comment>(this.endpoint, page, limit);
   }
 
   // Obtener todos los comentarios (para admin) con paginación
   getAllComments(page: number = 1, limit: number = 10): Observable<PaginatedResponse<Comment>> {
-    return this.apiService.get<PaginatedResponse<Comment>>(`${this.endpoint}/admin?page=${page}&limit=${limit}`);
+    return this.apiService.getPaginated<Comment>(`${this.endpoint}/admin`, page, limit);
   }
 
   // Obtener comentarios pendientes de aprobación (para admin)
@@ -28,23 +28,34 @@ export class CommentsService {
   }
 
   // Obtener un comentario por ID
-  getComment(id: number): Observable<ApiResponse<Comment>> {
+  getComment(id: string): Observable<ApiResponse<Comment>> {
     return this.apiService.get<ApiResponse<Comment>>(`${this.endpoint}/${id}`);
   }
 
   // Crear nuevo comentario
   createComment(comment: CreateCommentDto): Observable<ApiResponse<Comment>> {
+    console.log('Creating comment:', comment);
     return this.apiService.post<ApiResponse<Comment>>(this.endpoint, comment);
   }
 
+  // Aprobar comentario (para admin)
+  approveComment(id: string): Observable<ApiResponse<Comment>> {
+    return this.apiService.patch<ApiResponse<Comment>>(`${this.endpoint}/${id}/approve`, {});
+  }
+
+  // Rechazar comentario (para admin)
+  rejectComment(id: string): Observable<ApiResponse<Comment>> {
+    return this.apiService.patch<ApiResponse<Comment>>(`${this.endpoint}/${id}/reject`, {});
+  }
+
   // Eliminar comentario (para admin)
-  deleteComment(id: number): Observable<ApiResponse<void>> {
+  deleteComment(id: string): Observable<ApiResponse<void>> {
     return this.apiService.delete<ApiResponse<void>>(`${this.endpoint}/${id}`);
   }
 
   // Obtener comentarios recientes (últimos N comentarios aprobados)
   getRecentComments(limit: number = 5): Observable<ApiResponse<Comment[]>> {
-    return this.apiService.get<ApiResponse<Comment[]>>(`${this.endpoint}/recent?limit=${limit}`);
+    return this.apiService.get<ApiResponse<Comment[]>>(`${this.endpoint}/recent`, { limit });
   }
 
   // Contar comentarios pendientes (para admin)

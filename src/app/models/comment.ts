@@ -1,5 +1,6 @@
 export interface Comment {
-  id: number;
+  _id?: string; // MongoDB usa _id como string
+  id?: string;  // Para compatibilidad
   name: string;
   email: string;
   message: string;
@@ -22,9 +23,9 @@ export interface CreateCommentDto {
 export interface CommentWithReplies extends Comment {
   replies?: CommentWithReplies[];
   isReply?: boolean;
-  parentId?: number;
+  parentId?: string;
 }
 
 export interface NewCommentForm extends CreateCommentDto {
-  parentId?: number;
+  parentId?: string;
 }
