@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: '/api',
+  apiUrl: '/Backend/portfolio-backend',
   version: '1.0.0'
 };

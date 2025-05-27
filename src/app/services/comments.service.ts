@@ -37,16 +37,6 @@ export class CommentsService {
     return this.apiService.post<ApiResponse<Comment>>(this.endpoint, comment);
   }
 
-  // Aprobar comentario (para admin)
-  approveComment(id: number): Observable<ApiResponse<Comment>> {
-    return this.apiService.patch<ApiResponse<Comment>>(`${this.endpoint}/${id}/approve`, {});
-  }
-
-  // Rechazar/desaprobar comentario (para admin)
-  rejectComment(id: number): Observable<ApiResponse<Comment>> {
-    return this.apiService.patch<ApiResponse<Comment>>(`${this.endpoint}/${id}/reject`, {});
-  }
-
   // Eliminar comentario (para admin)
   deleteComment(id: number): Observable<ApiResponse<void>> {
     return this.apiService.delete<ApiResponse<void>>(`${this.endpoint}/${id}`);
