@@ -42,26 +42,44 @@ export class CommentsComponent implements OnInit {
 
     this.commentsService.getComments(this.currentPage, this.limit).subscribe({
       next: (response) => {
-        console.log('Comments response received:', response);
+        console.log('Raw comments response:', response);
 
-        // Verificar diferentes estructuras de respuesta
-        if (response && response.success) {
-          // Estructura con success
-          this.comments = response.data || [];
-          this.totalPages = response.pagination?.totalPages || 1;
-          console.log('Comments loaded (success structure):', this.comments);
-        } else if (response && Array.isArray(response)) {
-          // Respuesta directa como array
-          this.comments = response;
-          this.totalPages = 1;
-          console.log('Comments loaded (array structure):', this.comments);
-        } else if (response && response.data && Array.isArray(response.data)) {
-          // Otra estructura posible
-          this.comments = response.data;
-          this.totalPages = response.pagination?.totalPages || 1;
-          console.log('Comments loaded (data array structure):', this.comments);
-        } else {
-          console.warn('Unexpected response structure:', response);
+        try {
+          // Manejar diferentes estructuras de respuesta
+          if (response && response.success !== undefined) {
+            // Estructura estándar con success
+            if (response.success) {
+              this.comments = response.data || [];
+              this.totalPages = response.pagination?.totalPages || 1;
+              console.log('Comments loaded successfully:', this.comments);
+            } else {
+              console.warn('Response indicates failure:', response.message);
+              this.comments = [];
+              this.appStateService.showError(response.message || 'Error al cargar comentarios');
+            }
+          } else if (Array.isArray(response)) {
+            // Respuesta directa como array
+            this.comments = response;
+            this.totalPages = 1;
+            console.log('Comments loaded as array:', this.comments);
+          } else if (response && response.data && Array.isArray(response.data)) {
+            // Otra estructura posible
+            this.comments = response.data;
+            this.totalPages = response.pagination?.totalPages || 1;
+            console.log('Comments loaded from data property:', this.comments);
+          } else {
+            console.warn('Unexpected response structure:', response);
+            this.comments = [];
+          }
+
+          // Verificar si hay comentarios pero están pendientes de aprobación
+          if (this.comments.length === 0) {
+            console.log('No comments found, checking if there are pending comments...');
+            this.checkPendingComments();
+          }
+
+        } catch (error) {
+          console.error('Error processing comments response:', error);
           this.comments = [];
           this.appStateService.showError('Error al procesar comentarios');
         }
@@ -70,9 +88,33 @@ export class CommentsComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading comments:', error);
-        this.appStateService.showError(`Error al cargar comentarios: ${error.message}`);
+        this.comments = [];
         this.isLoading = false;
-        this.comments = []; // Asegurar array vacío en caso de error
+
+        // Mensaje de error más específico
+        let errorMessage = 'Error al cargar comentarios';
+        if (error.message.includes('conectar')) {
+          errorMessage = 'No se puede conectar con el servidor. Verifica que esté ejecutándose.';
+        } else if (error.status === 404) {
+          errorMessage = 'Endpoint de comentarios no encontrado';
+        }
+
+        this.appStateService.showError(errorMessage);
+      }
+    });
+  }
+
+  // Método auxiliar para verificar comentarios pendientes
+  checkPendingComments(): void {
+    this.commentsService.getPendingComments().subscribe({
+      next: (response) => {
+        if (response && response.success && response.data && response.data.length > 0) {
+          console.log(`Found ${response.data.length} pending comments`);
+          this.appStateService.showInfo(`Hay ${response.data.length} comentarios pendientes de aprobación`);
+        }
+      },
+      error: (error) => {
+        console.log('Could not check pending comments:', error);
       }
     });
   }
@@ -89,12 +131,13 @@ export class CommentsComponent implements OnInit {
           console.log('Comment created response:', response);
 
           if (response && (response.success || response.data)) {
-            this.appStateService.showSuccess('¡Comentario enviado exitosamente!');
+            this.appStateService.showSuccess('¡Comentario enviado exitosamente! Está pendiente de aprobación.');
             this.commentForm.reset();
 
-            // Recargar comentarios después de crear uno nuevo
-            // Nota: Si el comentario necesita aprobación, podrías no recargarlo
-            this.loadComments();
+            // Opcional: recargar comentarios solo si el comentario fue aprobado automáticamente
+            if (response.data?.approved) {
+              this.loadComments();
+            }
           } else {
             this.appStateService.showError(response.message || 'Error al enviar comentario');
           }
@@ -134,12 +177,36 @@ export class CommentsComponent implements OnInit {
     }
   }
 
+  // Método de utilidad para aprobar todos los comentarios (solo para testing)
+  approveAllCommentsForTesting(): void {
+    if (confirm('¿Estás seguro de que quieres aprobar todos los comentarios pendientes? (Solo para testing)')) {
+      this.commentsService.approveAllForTesting().subscribe({
+        next: (response) => {
+          console.log('Approve all response:', response);
+          if (response && response.success) {
+            this.appStateService.showSuccess(`${response.data?.modifiedCount || 0} comentarios aprobados`);
+            this.loadComments(); // Recargar comentarios
+          } else {
+            this.appStateService.showError('Error al aprobar comentarios');
+          }
+        },
+        error: (error) => {
+          console.error('Error approving all comments:', error);
+          this.appStateService.showError('Error al aprobar comentarios');
+        }
+      });
+    }
+  }
+
   // Método para debug - remover en producción
   debugComments(): void {
+    console.log('=== DEBUG COMMENTS ===');
     console.log('Current comments:', this.comments);
     console.log('Is loading:', this.isLoading);
     console.log('Current page:', this.currentPage);
     console.log('Total pages:', this.totalPages);
+    console.log('Comments length:', this.comments?.length || 0);
+    console.log('=== END DEBUG ===');
   }
 
   // Métodos auxiliares para la validación

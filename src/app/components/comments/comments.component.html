@@ -72,14 +72,41 @@
   <div class="comments-list">
     <h3>Comentarios ({{ comments.length || 0 }})</h3>
 
-    <!-- Debug info - remover en producción -->
-    <div style="background: #f0f0f0; padding: 10px; margin: 10px 0; border-radius: 5px; font-size: 12px;">
-      <strong>Debug Info:</strong><br>
-      IsLoading: {{ isLoading }}<br>
-      Comments Length: {{ comments.length || 0 }}<br>
-      Current Page: {{ currentPage }}<br>
-      Total Pages: {{ totalPages }}<br>
-      Comments Array: {{ comments | json }}
+    <!-- Botón temporal para aprobar todos los comentarios (solo para desarrollo) -->
+    <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 10px; margin: 10px 0; border-radius: 5px;">
+      <strong>🚧 Panel de desarrollo:</strong><br>
+      <button
+        (click)="approveAllCommentsForTesting()"
+        class="btn btn-warning"
+        style="margin-right: 10px; padding: 5px 10px; font-size: 12px;">
+        Aprobar todos los comentarios
+      </button>
+      <button
+        (click)="debugComments()"
+        class="btn btn-info"
+        style="padding: 5px 10px; font-size: 12px;">
+        Debug Info
+      </button>
+      <small style="display: block; margin-top: 5px; color: #856404;">
+        Usa "Aprobar todos" si no ves comentarios. Elimina este panel en producción.
+      </small>
+    </div>
+
+    <!-- Debug info mejorado -->
+    <div style="background: #f8f9fa; padding: 10px; margin: 10px 0; border-radius: 5px; font-size: 12px; border-left: 4px solid #007bff;">
+      <strong>🔍 Estado actual:</strong><br>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <div>
+          <strong>Carga:</strong> {{ isLoading ? '⏳ Cargando...' : '✅ Completo' }}<br>
+          <strong>Comentarios:</strong> {{ comments.length || 0 }}<br>
+          <strong>Página:</strong> {{ currentPage }} de {{ totalPages }}
+        </div>
+        <div>
+          <strong>Formulario válido:</strong> {{ commentForm.valid ? '✅' : '❌' }}<br>
+          <strong>Enviando:</strong> {{ isSubmitting ? '⏳' : '✅' }}<br>
+          <strong>Endpoint:</strong> {{ isLoading ? 'Conectando...' : 'OK' }}
+        </div>
+      </div>
     </div>
 
     <div *ngIf="isLoading" class="loading-state">
@@ -88,7 +115,15 @@
     </div>
 
     <div *ngIf="!isLoading && (!comments || comments.length === 0)" class="empty-state">
-      <p>No hay comentarios aún. ¡Sé el primero en comentar!</p>
+      <div style="text-align: center; padding: 40px; background: #f8f9fa; border-radius: 8px; margin: 20px 0;">
+        <h4 style="color: #6c757d; margin-bottom: 10px;">📝 No hay comentarios visibles</h4>
+        <p style="color: #6c757d; margin-bottom: 15px;">
+          Los comentarios necesitan aprobación antes de mostrarse públicamente.
+        </p>
+        <p style="font-size: 14px; color: #6c757d;">
+          Si acabas de crear comentarios, usa el botón "Aprobar todos los comentarios" arriba para verlos.
+        </p>
+      </div>
     </div>
 
     <div *ngIf="!isLoading && comments && comments.length > 0" class="comments-grid">
@@ -103,14 +138,25 @@
               </span>
             </div>
           </div>
+          <!-- Indicador de estado de aprobación -->
+          <div class="approval-status">
+            <span
+              *ngIf="comment.approved === true"
+              style="color: green; font-size: 12px;">✅ Aprobado</span>
+            <span
+              *ngIf="comment.approved === false"
+              style="color: orange; font-size: 12px;">⏳ Pendiente</span>
+          </div>
         </div>
         <div class="comment-content">
           <p>{{ comment.message || comment.text || comment.content }}</p>
         </div>
-        <!-- Debug por comentario individual -->
-        <div style="font-size: 10px; color: #666; margin-top: 5px;">
-          Debug #{{ i }}: {{ comment | json }}
-        </div>
+
+        <!-- Debug info por comentario (solo en desarrollo) -->
+        <details style="margin-top: 10px;">
+          <summary style="font-size: 10px; color: #666; cursor: pointer;">Ver datos técnicos</summary>
+          <pre style="font-size: 10px; color: #666; background: #f5f5f5; padding: 5px; margin-top: 5px; border-radius: 3px; overflow-x: auto;">{{ comment | json }}</pre>
+        </details>
       </div>
     </div>
 

@@ -14,6 +14,7 @@ export class CommentsService {
 
   // Obtener todos los comentarios aprobados con paginación
   getComments(page: number = 1, limit: number = 10): Observable<PaginatedResponse<Comment>> {
+    console.log(`Getting comments - page: ${page}, limit: ${limit}`);
     return this.apiService.getPaginated<Comment>(this.endpoint, page, limit);
   }
 
@@ -61,5 +62,11 @@ export class CommentsService {
   // Contar comentarios pendientes (para admin)
   getPendingCount(): Observable<ApiResponse<{ count: number }>> {
     return this.apiService.get<ApiResponse<{ count: number }>>(`${this.endpoint}/pending/count`);
+  }
+
+  // Método temporal para aprobar todos los comentarios (solo para testing)
+  approveAllForTesting(): Observable<ApiResponse<{ modifiedCount: number }>> {
+    console.log('Approving all comments for testing');
+    return this.apiService.post<ApiResponse<{ modifiedCount: number }>>(`${this.endpoint}/approve-all-for-testing`, {});
   }
 }

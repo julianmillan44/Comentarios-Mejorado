@@ -26,33 +26,41 @@ export class CommentItemComponent {
     }
   }
 
-  formatDate(date: Date | undefined): string {
-    // Si no hay fecha, usar fecha actual
-    const targetDate = date || new Date();
+  formatDate(date: Date | string | undefined): string {
+  // Si no hay fecha, usar fecha actual
+  let targetDate: Date;
 
-    const now = new Date();
-    const diff = now.getTime() - targetDate.getTime();
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-
-    if (days === 0) {
-      const hours = Math.floor(diff / (1000 * 60 * 60));
-      if (hours === 0) {
-        const minutes = Math.floor(diff / (1000 * 60));
-        return `hace ${minutes} minutos`;
-      }
-      return `hace ${hours} horas`;
-    } else if (days === 1) {
-      return 'hace 1 día';
-    } else if (days < 7) {
-      return `hace ${days} días`;
-    } else {
-      return targetDate.toLocaleDateString('es-ES', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
-    }
+  if (!date) {
+    targetDate = new Date();
+  } else if (typeof date === 'string') {
+    targetDate = new Date(date);
+  } else {
+    targetDate = date;
   }
+
+  const now = new Date();
+  const diff = now.getTime() - targetDate.getTime();
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+  if (days === 0) {
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    if (hours === 0) {
+      const minutes = Math.floor(diff / (1000 * 60));
+      return `hace ${minutes} minutos`;
+    }
+    return `hace ${hours} horas`;
+  } else if (days === 1) {
+    return 'hace 1 día';
+  } else if (days < 7) {
+    return `hace ${days} días`;
+  } else {
+    return targetDate.toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  }
+}
 
   getAvatarUrl(): string {
     // Verificar que comment existe antes de acceder a sus propiedades
