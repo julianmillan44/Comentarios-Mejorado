@@ -70,13 +70,13 @@
 
   <!-- Lista de comentarios -->
   <div class="comments-list">
-    <h3>Comentarios ({{ comments?.length || 0 }})</h3>
+    <h3>Comentarios ({{ comments.length || 0 }})</h3>
 
     <!-- Debug info - remover en producción -->
     <div style="background: #f0f0f0; padding: 10px; margin: 10px 0; border-radius: 5px; font-size: 12px;">
       <strong>Debug Info:</strong><br>
       IsLoading: {{ isLoading }}<br>
-      Comments Length: {{ comments?.length || 0 }}<br>
+      Comments Length: {{ comments.length || 0 }}<br>
       Current Page: {{ currentPage }}<br>
       Total Pages: {{ totalPages }}<br>
       Comments Array: {{ comments | json }}
