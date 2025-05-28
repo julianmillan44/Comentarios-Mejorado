@@ -6,7 +6,7 @@ import { Comment, CreateCommentDto } from '../../models/comment';
 
 @Component({
   selector: 'app-comments',
-  standalone:false,
+  standalone: false,
   templateUrl: './comments.component.html',
   styleUrls: ['./comments.component.css']
 })
@@ -32,26 +32,47 @@ export class CommentsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log('CommentsComponent initialized');
     this.loadComments();
   }
 
   loadComments(): void {
+    console.log('Loading comments...');
     this.isLoading = true;
+
     this.commentsService.getComments(this.currentPage, this.limit).subscribe({
       next: (response) => {
-        console.log('Comments response:', response);
-        if (response.success) {
+        console.log('Comments response received:', response);
+
+        // Verificar diferentes estructuras de respuesta
+        if (response && response.success) {
+          // Estructura con success
+          this.comments = response.data || [];
+          this.totalPages = response.pagination?.totalPages || 1;
+          console.log('Comments loaded (success structure):', this.comments);
+        } else if (response && Array.isArray(response)) {
+          // Respuesta directa como array
+          this.comments = response;
+          this.totalPages = 1;
+          console.log('Comments loaded (array structure):', this.comments);
+        } else if (response && response.data && Array.isArray(response.data)) {
+          // Otra estructura posible
           this.comments = response.data;
-          this.totalPages = response.pagination.totalPages;
+          this.totalPages = response.pagination?.totalPages || 1;
+          console.log('Comments loaded (data array structure):', this.comments);
         } else {
-          this.appStateService.showError('Error al cargar comentarios');
+          console.warn('Unexpected response structure:', response);
+          this.comments = [];
+          this.appStateService.showError('Error al procesar comentarios');
         }
+
         this.isLoading = false;
       },
       error: (error) => {
         console.error('Error loading comments:', error);
         this.appStateService.showError(`Error al cargar comentarios: ${error.message}`);
         this.isLoading = false;
+        this.comments = []; // Asegurar array vacío en caso de error
       }
     });
   }
@@ -66,10 +87,14 @@ export class CommentsComponent implements OnInit {
       this.commentsService.createComment(commentData).subscribe({
         next: (response) => {
           console.log('Comment created response:', response);
-          if (response.success) {
-            this.appStateService.showSuccess('¡Comentario enviado! Será revisado antes de publicarse.');
+
+          if (response && (response.success || response.data)) {
+            this.appStateService.showSuccess('¡Comentario enviado exitosamente!');
             this.commentForm.reset();
-            // No recargamos los comentarios inmediatamente porque necesita aprobación
+
+            // Recargar comentarios después de crear uno nuevo
+            // Nota: Si el comentario necesita aprobación, podrías no recargarlo
+            this.loadComments();
           } else {
             this.appStateService.showError(response.message || 'Error al enviar comentario');
           }
@@ -107,6 +132,14 @@ export class CommentsComponent implements OnInit {
       this.currentPage--;
       this.loadComments();
     }
+  }
+
+  // Método para debug - remover en producción
+  debugComments(): void {
+    console.log('Current comments:', this.comments);
+    console.log('Is loading:', this.isLoading);
+    console.log('Current page:', this.currentPage);
+    console.log('Total pages:', this.totalPages);
   }
 
   // Métodos auxiliares para la validación

@@ -12,8 +12,13 @@ export class ApiService {
   private readonly baseUrl: string;
 
   constructor(private http: HttpClient) {
-    // Configuración correcta para Docker
-    this.baseUrl = environment.production ? '/api' : 'http://localhost:3001/api';
+    // Configuración corregida para Docker y desarrollo
+    if (environment.production) {
+      this.baseUrl = '/api';
+    } else {
+      this.baseUrl = 'http://localhost:3001/api';
+    }
+    console.log('API Base URL:', this.baseUrl);
   }
 
   /**
@@ -26,8 +31,17 @@ export class ApiService {
       params: httpParams
     };
 
-    return this.http.get<T>(`${this.baseUrl}/${endpoint}`, options)
-      .pipe(catchError(this.handleError));
+    const url = `${this.baseUrl}/${endpoint}`;
+    console.log('GET Request to:', url, 'with params:', params);
+
+    return this.http.get<T>(url, options)
+      .pipe(
+        map((response: any) => {
+          console.log('GET Response:', response);
+          return response;
+        }),
+        catchError(this.handleError)
+      );
   }
 
   /**
@@ -38,8 +52,17 @@ export class ApiService {
       headers: this.getHeaders()
     };
 
-    return this.http.post<T>(`${this.baseUrl}/${endpoint}`, data, options)
-      .pipe(catchError(this.handleError));
+    const url = `${this.baseUrl}/${endpoint}`;
+    console.log('POST Request to:', url, 'with data:', data);
+
+    return this.http.post<T>(url, data, options)
+      .pipe(
+        map((response: any) => {
+          console.log('POST Response:', response);
+          return response;
+        }),
+        catchError(this.handleError)
+      );
   }
 
   /**
@@ -89,8 +112,17 @@ export class ApiService {
       params: httpParams
     };
 
-    return this.http.get<PaginatedResponse<T>>(`${this.baseUrl}/${endpoint}`, options)
-      .pipe(catchError(this.handleError));
+    const url = `${this.baseUrl}/${endpoint}`;
+    console.log('GET Paginated Request to:', url, 'with params:', paginationParams);
+
+    return this.http.get<PaginatedResponse<T>>(url, options)
+      .pipe(
+        map((response: any) => {
+          console.log('GET Paginated Response:', response);
+          return response;
+        }),
+        catchError(this.handleError)
+      );
   }
 
   /**
