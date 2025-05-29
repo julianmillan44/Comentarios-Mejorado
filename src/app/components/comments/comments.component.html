@@ -3,97 +3,65 @@
     <h2>Comentarios</h2>
     <p>Comparte tu opinión sobre mi trabajo</p>
   </div>
-
-  <!-- Formulario para nuevo comentario -->
   <div class="comment-form-section">
     <h3>Deja un comentario</h3>
     <form [formGroup]="commentForm" (ngSubmit)="onSubmit()" class="comment-form">
       <div class="form-group">
         <label for="name">Nombre *</label>
-        <input
-          type="text"
-          id="name"
-          formControlName="name"
-          class="form-control"
-          [class.invalid]="name?.invalid && name?.touched"
-          placeholder="Tu nombre completo"
-        >
+        <input type="text" id="name" formControlName="name" class="form-control"
+          [class.invalid]="name?.invalid && name?.touched" placeholder="Tu nombre completo">
         <div *ngIf="name?.invalid && name?.touched" class="error-message">
           <span *ngIf="name?.errors?.['required']">El nombre es requerido</span>
           <span *ngIf="name?.errors?.['minlength']">El nombre debe tener al menos 2 caracteres</span>
         </div>
       </div>
-
       <div class="form-group">
         <label for="email">Email *</label>
-        <input
-          type="email"
-          id="email"
-          formControlName="email"
-          class="form-control"
-          [class.invalid]="email?.invalid && email?.touched"
-          placeholder="tu@email.com"
-        >
+        <input type="email" id="email" formControlName="email" class="form-control"
+          [class.invalid]="email?.invalid && email?.touched" placeholder="tu@email.com">
         <div *ngIf="email?.invalid && email?.touched" class="error-message">
           <span *ngIf="email?.errors?.['required']">El email es requerido</span>
           <span *ngIf="email?.errors?.['email']">Ingresa un email válido</span>
         </div>
       </div>
-
       <div class="form-group">
         <label for="message">Mensaje *</label>
-        <textarea
-          id="message"
-          formControlName="message"
-          class="form-control"
-          [class.invalid]="message?.invalid && message?.touched"
-          rows="4"
-          placeholder="Escribe tu comentario aquí..."
-        ></textarea>
+        <textarea id="message" formControlName="message" class="form-control"
+          [class.invalid]="message?.invalid && message?.touched" rows="4"
+          placeholder="Escribe tu comentario aquí..."></textarea>
         <div *ngIf="message?.invalid && message?.touched" class="error-message">
           <span *ngIf="message?.errors?.['required']">El mensaje es requerido</span>
           <span *ngIf="message?.errors?.['minlength']">El mensaje debe tener al menos 10 caracteres</span>
         </div>
       </div>
 
-      <button
-        type="submit"
-        class="btn btn-primary"
-        [disabled]="commentForm.invalid || isSubmitting"
-        [class.loading]="isSubmitting"
-      >
+      <button type="submit" class="btn btn-primary" [disabled]="commentForm.invalid || isSubmitting"
+        [class.loading]="isSubmitting">
         <span *ngIf="!isSubmitting">Enviar Comentario</span>
         <span *ngIf="isSubmitting">Enviando...</span>
       </button>
     </form>
   </div>
 
-  <!-- Lista de comentarios -->
   <div class="comments-list">
     <h3>Comentarios ({{ comments.length || 0 }})</h3>
 
-    <!-- Botón temporal para aprobar todos los comentarios (solo para desarrollo) -->
     <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 10px; margin: 10px 0; border-radius: 5px;">
       <strong>🚧 Panel de desarrollo:</strong><br>
-      <button
-        (click)="approveAllCommentsForTesting()"
-        class="btn btn-warning"
+      <button (click)="approveAllCommentsForTesting()" class="btn btn-warning"
         style="margin-right: 10px; padding: 5px 10px; font-size: 12px;">
         Aprobar todos los comentarios
       </button>
-      <button
-        (click)="debugComments()"
-        class="btn btn-info"
-        style="padding: 5px 10px; font-size: 12px;">
+      <button (click)="debugComments()" class="btn btn-info" style="padding: 5px 10px; font-size: 12px;">
         Debug Info
       </button>
       <small style="display: block; margin-top: 5px; color: #856404;">
-        Usa "Aprobar todos" si no ves comentarios. Elimina este panel en producción.
+        Usa "Aprobar todos" si no ves comentarios.
       </small>
     </div>
 
-    <!-- Debug info mejorado -->
-    <div style="background: #f8f9fa; padding: 10px; margin: 10px 0; border-radius: 5px; font-size: 12px; border-left: 4px solid #007bff;">
+    <div
+      style="background: #f8f9fa; padding: 10px; margin: 10px 0; border-radius: 5px; font-size: 12px; border-left: 4px solid #007bff;">
       <strong>🔍 Estado actual:</strong><br>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
         <div>
@@ -138,43 +106,29 @@
               </span>
             </div>
           </div>
-          <!-- Indicador de estado de aprobación -->
           <div class="approval-status">
-            <span
-              *ngIf="comment.approved === true"
-              style="color: green; font-size: 12px;">✅ Aprobado</span>
-            <span
-              *ngIf="comment.approved === false"
-              style="color: orange; font-size: 12px;">⏳ Pendiente</span>
+            <span *ngIf="comment.approved === true" style="color: green; font-size: 12px;">✅ Aprobado</span>
+            <span *ngIf="comment.approved === false" style="color: orange; font-size: 12px;">⏳ Pendiente</span>
           </div>
         </div>
         <div class="comment-content">
           <p>{{ comment.message || comment.text || comment.content }}</p>
         </div>
 
-        <!-- Debug info por comentario (solo en desarrollo) -->
         <details style="margin-top: 10px;">
           <summary style="font-size: 10px; color: #666; cursor: pointer;">Ver datos técnicos</summary>
-          <pre style="font-size: 10px; color: #666; background: #f5f5f5; padding: 5px; margin-top: 5px; border-radius: 3px; overflow-x: auto;">{{ comment | json }}</pre>
+          <pre
+            style="font-size: 10px; color: #666; background: #f5f5f5; padding: 5px; margin-top: 5px; border-radius: 3px; overflow-x: auto;">{{ comment | json }}</pre>
         </details>
       </div>
     </div>
 
-    <!-- Paginación -->
     <div *ngIf="totalPages > 1" class="pagination">
-      <button
-        (click)="previousPage()"
-        [disabled]="currentPage === 1"
-        class="btn btn-secondary"
-      >
+      <button (click)="previousPage()" [disabled]="currentPage === 1" class="btn btn-secondary">
         Anterior
       </button>
       <span class="page-info">Página {{ currentPage }} de {{ totalPages }}</span>
-      <button
-        (click)="nextPage()"
-        [disabled]="currentPage === totalPages"
-        class="btn btn-secondary"
-      >
+      <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="btn btn-secondary">
         Siguiente
       </button>
     </div>

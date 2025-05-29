@@ -45,9 +45,7 @@ export class CommentsComponent implements OnInit {
         console.log('Raw comments response:', response);
 
         try {
-          // Manejar diferentes estructuras de respuesta
           if (response && response.success !== undefined) {
-            // Estructura estándar con success
             if (response.success) {
               this.comments = response.data || [];
               this.totalPages = response.pagination?.totalPages || 1;
@@ -58,12 +56,10 @@ export class CommentsComponent implements OnInit {
               this.appStateService.showError(response.message || 'Error al cargar comentarios');
             }
           } else if (Array.isArray(response)) {
-            // Respuesta directa como array
             this.comments = response;
             this.totalPages = 1;
             console.log('Comments loaded as array:', this.comments);
           } else if (response && response.data && Array.isArray(response.data)) {
-            // Otra estructura posible
             this.comments = response.data;
             this.totalPages = response.pagination?.totalPages || 1;
             console.log('Comments loaded from data property:', this.comments);
@@ -72,7 +68,6 @@ export class CommentsComponent implements OnInit {
             this.comments = [];
           }
 
-          // Verificar si hay comentarios pero están pendientes de aprobación
           if (this.comments.length === 0) {
             console.log('No comments found, checking if there are pending comments...');
             this.checkPendingComments();
@@ -91,7 +86,6 @@ export class CommentsComponent implements OnInit {
         this.comments = [];
         this.isLoading = false;
 
-        // Mensaje de error más específico
         let errorMessage = 'Error al cargar comentarios';
         if (error.message.includes('conectar')) {
           errorMessage = 'No se puede conectar con el servidor. Verifica que esté ejecutándose.';
@@ -104,7 +98,6 @@ export class CommentsComponent implements OnInit {
     });
   }
 
-  // Método auxiliar para verificar comentarios pendientes
   checkPendingComments(): void {
     this.commentsService.getPendingComments().subscribe({
       next: (response) => {
@@ -134,7 +127,6 @@ export class CommentsComponent implements OnInit {
             this.appStateService.showSuccess('¡Comentario enviado exitosamente! Está pendiente de aprobación.');
             this.commentForm.reset();
 
-            // Opcional: recargar comentarios solo si el comentario fue aprobado automáticamente
             if (response.data?.approved) {
               this.loadComments();
             }
@@ -177,7 +169,6 @@ export class CommentsComponent implements OnInit {
     }
   }
 
-  // Método de utilidad para aprobar todos los comentarios (solo para testing)
   approveAllCommentsForTesting(): void {
     if (confirm('¿Estás seguro de que quieres aprobar todos los comentarios pendientes? (Solo para testing)')) {
       this.commentsService.approveAllForTesting().subscribe({
@@ -185,7 +176,7 @@ export class CommentsComponent implements OnInit {
           console.log('Approve all response:', response);
           if (response && response.success) {
             this.appStateService.showSuccess(`${response.data?.modifiedCount || 0} comentarios aprobados`);
-            this.loadComments(); // Recargar comentarios
+            this.loadComments();
           } else {
             this.appStateService.showError('Error al aprobar comentarios');
           }
@@ -198,7 +189,6 @@ export class CommentsComponent implements OnInit {
     }
   }
 
-  // Método para debug - remover en producción
   debugComments(): void {
     console.log('=== DEBUG COMMENTS ===');
     console.log('Current comments:', this.comments);
@@ -209,7 +199,6 @@ export class CommentsComponent implements OnInit {
     console.log('=== END DEBUG ===');
   }
 
-  // Métodos auxiliares para la validación
   get name() { return this.commentForm.get('name'); }
   get email() { return this.commentForm.get('email'); }
   get message() { return this.commentForm.get('message'); }
