@@ -1,0 +1,127 @@
+<!-- src/app/components/contact/contact.component.html -->
+<div class="contact-container">
+  <div class="contact-header">
+    <h2>Contáctame</h2>
+    <p>¿Tienes un proyecto en mente? ¡Hablemos!</p>
+  </div>
+
+  <div class="contact-form-section">
+    <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="contact-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="name">Nombre *</label>
+          <input
+            type="text"
+            id="name"
+            formControlName="name"
+            class="form-control"
+            [class.invalid]="name?.invalid && name?.touched"
+            placeholder="Tu nombre completo">
+          <div *ngIf="name?.invalid && name?.touched" class="error-message">
+            <span *ngIf="name?.errors?.['required']">El nombre es requerido</span>
+            <span *ngIf="name?.errors?.['minlength']">El nombre debe tener al menos 2 caracteres</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email *</label>
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            class="form-control"
+            [class.invalid]="email?.invalid && email?.touched"
+            placeholder="tu@email.com">
+          <div *ngIf="email?.invalid && email?.touched" class="error-message">
+            <span *ngIf="email?.errors?.['required']">El email es requerido</span>
+            <span *ngIf="email?.errors?.['email']">Ingresa un email válido</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="subject">Asunto *</label>
+        <input
+          type="text"
+          id="subject"
+          formControlName="subject"
+          class="form-control"
+          [class.invalid]="subject?.invalid && subject?.touched"
+          placeholder="¿De qué quieres hablar?">
+        <div *ngIf="subject?.invalid && subject?.touched" class="error-message">
+          <span *ngIf="subject?.errors?.['required']">El asunto es requerido</span>
+          <span *ngIf="subject?.errors?.['minlength']">El asunto debe tener al menos 3 caracteres</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="message">Mensaje *</label>
+        <textarea
+          id="message"
+          formControlName="message"
+          class="form-control"
+          [class.invalid]="message?.invalid && message?.touched"
+          rows="6"
+          placeholder="Cuéntame sobre tu proyecto, idea o cualquier consulta que tengas..."></textarea>
+        <div *ngIf="message?.invalid && message?.touched" class="error-message">
+          <span *ngIf="message?.errors?.['required']">El mensaje es requerido</span>
+          <span *ngIf="message?.errors?.['minlength']">El mensaje debe tener al menos 20 caracteres</span>
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="contactForm.invalid || isSubmitting"
+        [class.loading]="isSubmitting">
+        <span *ngIf="!isSubmitting">
+          <i class="fas fa-paper-plane"></i>
+          Enviar Mensaje
+        </span>
+        <span *ngIf="isSubmitting">
+          <i class="fas fa-spinner fa-spin"></i>
+          Enviando...
+        </span>
+      </button>
+    </form>
+  </div>
+
+  <!-- Panel de contacto alternativo -->
+  <div class="contact-info">
+    <h3>Otras formas de contacto</h3>
+    <div class="contact-methods">
+      <div class="contact-method">
+        <i class="fas fa-envelope"></i>
+        <span>julianocampomillan19gmail.com</span>
+      </div>
+      <div class="contact-method">
+        <i class="fab fa-linkedin"></i>
+        <span>LinkedIn:Julian Andrés Ocampo Millán</span>
+      </div>
+      <div class="contact-method">
+        <i class="fab fa-github"></i>
+        <span>GitHub:julianmillan44</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Debug panel (solo en desarrollo) -->
+  <div *ngIf="showDebugInfo" class="debug-panel">
+    <h4>🔧 Debug Info</h4>
+    <div class="debug-content">
+      <p><strong>Form Valid:</strong> {{ contactForm.valid ? '✅' : '❌' }}</p>
+      <p><strong>Submitting:</strong> {{ isSubmitting ? '⏳' : '✅' }}</p>
+      <p><strong>Last Response:</strong></p>
+      <pre>{{ lastResponse | json }}</pre>
+    </div>
+    <button (click)="toggleDebug()" class="btn btn-sm">Ocultar Debug</button>
+  </div>
+
+  <button
+    *ngIf="!showDebugInfo"
+    (click)="toggleDebug()"
+    class="debug-toggle"
+    title="Mostrar información de debug">
+    🔧
+  </button>
+</div>
