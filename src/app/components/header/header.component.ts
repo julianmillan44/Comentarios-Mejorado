@@ -13,11 +13,11 @@ export class HeaderComponent implements OnInit {
   isMenuOpen: boolean = false;
 
   navigationItems = [
-    { path: '/', label: 'Inicio', icon: 'home' },
-    { path: '/about', label: 'Acerca de', icon: 'user' },
-    { path: '/projects', label: 'Proyectos', icon: 'code' },
-    { path: '/comments', label: 'Comentarios', icon: 'message-circle' },
-    { path: '/contact', label: 'Contacto', icon: 'mail' }
+    { path: '/', label: 'Inicio', icon: 'house-fill' },
+    { path: '/about', label: 'Acerca de', icon: 'person-fill' },
+    { path: '/projects', label: 'Proyectos', icon: 'code-square' },
+    { path: '/comments', label: 'Comentarios', icon: 'chat-square-dots-fill' },
+    { path: '/contact', label: 'Contacto', icon: 'envelope-fill' }
   ];
 
   constructor(private router: Router) {}

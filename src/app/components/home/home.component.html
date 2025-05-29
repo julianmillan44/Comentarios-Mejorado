@@ -1,37 +1,139 @@
 <!-- Hero Section -->
-<section class="hero">
-  <div class="container">
-    <div class="hero-content">
-      <div class="hero-text">
-        <h1 class="hero-title">
-          <span class="greeting">¡Hola! Soy</span>
-          <span class="name">Julian Millán</span>
-        </h1>
-        <h2 class="hero-subtitle">Desarrollador Full Stack</h2>
-        <p class="hero-description">
-          Apasionado por crear soluciones web innovadoras y experiencias de usuario excepcionales.
-          Especializado en Angular, NestJS, y tecnologías modernas de desarrollo.
-        </p>
-        <div class="hero-buttons">
-          <a routerLink="/projects" class="btn btn-primary">
-            <i class="icon icon-code"></i>
-            Ver Proyectos
-
-          </a>
-          <a routerLink="/contact" class="btn btn-secondary">
-            <i class="icon icon-mail"></i>
-            Contactar
-          </a>
+<section class="hero min-vh-100 d-flex align-items-center position-relative overflow-hidden">
+  <div class="hero-bg position-absolute w-100 h-100"></div>
+  <div class="container position-relative">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6" data-aos="fade-right" data-aos-duration="1000">
+        <div class="hero-text">
+          <span class="greeting badge bg-primary-subtle text-primary fs-6 fw-normal mb-3 d-inline-block px-3 py-2 rounded-pill">
+            ¡Hola! Soy
+          </span>
+          <h1 class="hero-title display-1 fw-bold text-primary mb-3 lh-1">
+            Julian Millán
+          </h1>
+          <h2 class="hero-subtitle h3 text-secondary fw-semibold mb-4">
+            Desarrollador Full Stack
+            <span class="text-primary ms-2">
+              <i class="fas fa-code"></i>
+            </span>
+          </h2>
+          <p class="hero-description lead text-muted mb-4 pe-lg-5">
+            Apasionado por crear soluciones web innovadoras y experiencias de usuario excepcionales.
+            Especializado en <span class="text-primary fw-semibold">Angular</span>,
+            <span class="text-secondary fw-semibold">NestJS</span>, y tecnologías modernas de desarrollo.
+          </p>
+          <div class="hero-buttons d-flex flex-wrap gap-3 mb-4">
+            <a routerLink="/projects" class="btn btn-primary btn-lg px-4 py-3 rounded-pill shadow-sm">
+              <i class="fas fa-laptop-code me-2"></i>
+              Ver Proyectos
+            </a>
+            <a routerLink="/contact" class="btn btn-outline-primary btn-lg px-4 py-3 rounded-pill">
+              <i class="fas fa-envelope me-2"></i>
+              Contactar
+            </a>
+          </div>
+          <div class="social-links d-flex gap-3">
+            <a href="#" class="btn btn-outline-secondary btn-sm rounded-circle p-2" target="_blank">
+              <i class="fab fa-github"></i>
+            </a>
+            <a href="#" class="btn btn-outline-secondary btn-sm rounded-circle p-2" target="_blank">
+              <i class="fab fa-linkedin"></i>
+            </a>
+            <a href="#" class="btn btn-outline-secondary btn-sm rounded-circle p-2" target="_blank">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </div>
         </div>
       </div>
-      <div class="hero-image">
-        <div class="profile-container">
-          <div class="profile-background"></div>
-          <div class="profile-image">
-            <div class="code-animation">
-              <span class="code-line" *ngFor="let line of codeLines; let i = index"
-                    [style.animation-delay]="i * 0.2 + 's'">
-                {{ line }}
+
+      <div class="col-lg-6 text-center" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="200">
+        <div class="hero-image">
+          <div class="profile-container position-relative mx-auto">
+            <div class="profile-background position-absolute w-100 h-100 rounded-circle"></div>
+            <div class="profile-inner position-absolute rounded-circle d-flex align-items-center justify-content-center">
+              <div class="code-animation text-white font-monospace small">
+                <div class="typing-container">
+                  <span class="code-line d-block mb-1"
+                        *ngFor="let line of codeLines; let i = index"
+                        [style.animation-delay]="(i * 0.3) + 's'">
+                    {{ line }}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <!-- Floating elements -->
+            <div class="floating-icon position-absolute" style="top: 10%; right: -10%;">
+              <i class="fab fa-angular text-danger fs-4"></i>
+            </div>
+            <div class="floating-icon position-absolute" style="bottom: 20%; left: -15%;">
+              <i class="fab fa-node-js text-success fs-4"></i>
+            </div>
+            <div class="floating-icon position-absolute" style="top: 60%; right: -5%;">
+              <i class="fas fa-database text-info fs-4"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="scroll-indicator position-absolute bottom-0 start-50 translate-middle-x mb-4">
+    <div class="scroll-mouse">
+      <span class="scroll-wheel"></span>
+    </div>
+    <p class="small text-muted mt-2">Scroll para ver más</p>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats py-5 bg-light">
+  <div class="container">
+    <div class="row g-4" data-aos="fade-up" data-aos-duration="800">
+      <div class="col-6 col-md-3" *ngFor="let stat of stats; let i = index"
+           [attr.data-aos-delay]="i * 100">
+        <div class="stat-card card border-0 shadow-sm h-100 text-center p-4 hover-lift">
+          <div class="stat-icon mx-auto mb-3 d-flex align-items-center justify-content-center">
+            <i class="fas" [class]="'fa-' + stat.icon + ' fs-2 text-primary'"></i>
+          </div>
+          <div class="stat-content">
+            <h3 class="stat-number display-6 fw-bold text-primary mb-1 counter"
+                [attr.data-target]="stat.number">0</h3>
+            <p class="stat-label text-muted small mb-0">{{ stat.label }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Skills Preview -->
+<section class="skills-preview py-5">
+  <div class="container">
+    <div class="section-header text-center mb-5" data-aos="fade-up">
+      <h2 class="section-title display-4 fw-bold text-primary mb-3">
+        Tecnologías que domino
+      </h2>
+      <p class="section-description lead text-muted mx-auto" style="max-width: 600px;">
+        Herramientas y tecnologías con las que trabajo diariamente para crear soluciones robustas
+      </p>
+      <div class="section-divider mx-auto mt-4"></div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-6 col-xl-3" *ngFor="let category of skillCategories; let i = index"
+           data-aos="fade-up" [attr.data-aos-delay]="i * 150">
+        <div class="skill-category card border-0 shadow-sm h-100 p-4 hover-lift">
+          <div class="card-body text-center">
+            <div class="category-icon mb-3">
+              <i class="fas" [class]="getCategoryIcon(category.name) + ' fs-2 text-primary'"></i>
+            </div>
+            <h3 class="category-title h5 fw-semibold text-dark mb-3">{{ category.name }}</h3>
+            <div class="skills-list d-flex flex-wrap justify-content-center gap-2">
+              <span class="skill-item badge bg-primary-subtle text-primary px-3 py-2 rounded-pill"
+                    *ngFor="let skill of category.skills; let j = index"
+                    [style.animation-delay]="(j * 0.1) + 's'">
+                {{ skill }}
               </span>
             </div>
           </div>
@@ -41,99 +143,127 @@
   </div>
 </section>
 
-<!-- Stats Section -->
-<section class="stats">
-  <div class="container">
-    <div class="stats-grid">
-      <div class="stat-card" *ngFor="let stat of stats">
-        <div class="stat-icon">
-          <i class="icon" [class]="'icon-' + stat.icon"></i>
-        </div>
-        <div class="stat-content">
-          <h3 class="stat-number">{{ stat.number }}</h3>
-          <p class="stat-label">{{ stat.label }}</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Skills Preview -->
-<section class="skills-preview">
-  <div class="container">
-    <div class="section-header">
-      <h2 class="section-title">Tecnologías que domino</h2>
-      <p class="section-description">
-        Herramientas y tecnologías con las que trabajo diariamente
-      </p>
-    </div>
-    <div class="skills-grid">
-      <div class="skill-category" *ngFor="let category of skillCategories">
-        <h3 class="category-title">{{ category.name }}</h3>
-        <div class="skills-list">
-          <span class="skill-item" *ngFor="let skill of category.skills">
-            {{ skill }}
-          </span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- Recent Projects Preview -->
-<section class="recent-projects">
+<section class="recent-projects py-5 bg-light">
   <div class="container">
-    <div class="section-header">
-      <h2 class="section-title">Proyectos Destacados</h2>
-      <p class="section-description">
-        Algunos de mis trabajos más recientes
+    <div class="section-header text-center mb-5" data-aos="fade-up">
+      <h2 class="section-title display-4 fw-bold text-primary mb-3">
+        Proyectos Destacados
+      </h2>
+      <p class="section-description lead text-muted mx-auto" style="max-width: 600px;">
+        Algunos de mis trabajos más recientes que demuestran mis habilidades
       </p>
+      <div class="section-divider mx-auto mt-4"></div>
     </div>
-    <div class="projects-grid">
-      <div class="project-preview" *ngFor="let project of featuredProjects">
-        <div class="project-image">
-          <div class="project-overlay">
-            <div class="project-buttons">
-              <button class="btn-icon" (click)="viewProject(project.id)">
-                <i class="icon icon-eye"></i>
-              </button>
-              <a [href]="project.github" target="_blank" class="btn-icon">
-                <i class="icon icon-github"></i>
-              </a>
+
+    <div class="row g-4 mb-5">
+      <div class="col-lg-4" *ngFor="let project of featuredProjects; let i = index"
+           data-aos="fade-up" [attr.data-aos-delay]="i * 200">
+        <div class="project-preview card border-0 shadow-sm h-100 overflow-hidden hover-lift">
+          <div class="project-image position-relative">
+            <div class="project-bg w-100 h-100 d-flex align-items-center justify-content-center">
+              <i class="fas fa-laptop-code text-white fs-1 opacity-75"></i>
+            </div>
+            <div class="project-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+              <div class="project-buttons d-flex gap-3">
+                <button class="btn btn-light btn-sm rounded-circle p-3 shadow-sm"
+                        (click)="viewProject(project.id)"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        title="Ver proyecto">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <a [href]="project.github" target="_blank"
+                   class="btn btn-light btn-sm rounded-circle p-3 shadow-sm"
+                   data-bs-toggle="tooltip"
+                   data-bs-placement="top"
+                   title="Ver código">
+                  <i class="fab fa-github"></i>
+                </a>
+              </div>
+            </div>
+            <div class="project-status position-absolute top-0 end-0 m-3">
+              <span class="badge bg-success">Completado</span>
+            </div>
+          </div>
+
+          <div class="card-body p-4">
+            <h3 class="project-title h5 fw-semibold text-dark mb-2">{{ project.title }}</h3>
+            <p class="project-description text-muted small mb-3 lh-base">{{ project.description }}</p>
+            <div class="project-tags d-flex flex-wrap gap-2 mb-3">
+              <span class="tag badge bg-secondary-subtle text-secondary" *ngFor="let tag of project.tags">
+                {{ tag }}
+              </span>
+            </div>
+            <div class="project-footer d-flex justify-content-between align-items-center">
+              <small class="text-muted">
+                <i class="fas fa-calendar-alt me-1"></i>
+                2024
+              </small>
+              <div class="project-links">
+                <a [href]="project.github" target="_blank" class="text-decoration-none text-muted me-2">
+                  <i class="fab fa-github"></i>
+                </a>
+                <button class="btn btn-link text-decoration-none text-muted p-0"
+                        (click)="viewProject(project.id)">
+                  <i class="fas fa-external-link-alt"></i>
+                </button>
+              </div>
             </div>
           </div>
         </div>
-        <div class="project-info">
-          <h3 class="project-title">{{ project.title }}</h3>
-          <p class="project-description">{{ project.description }}</p>
-          <div class="project-tags">
-            <span class="tag" *ngFor="let tag of project.tags">{{ tag }}</span>
-          </div>
-        </div>
       </div>
     </div>
-    <div class="section-footer">
-      <a routerLink="/projects" class="btn btn-outline">
+
+    <div class="section-footer text-center" data-aos="fade-up">
+      <a routerLink="/projects" class="btn btn-outline-primary btn-lg px-4 py-3 rounded-pill">
         Ver todos los proyectos
-        <i class="icon icon-arrow-right"></i>
+        <i class="fas fa-arrow-right ms-2"></i>
       </a>
     </div>
   </div>
 </section>
 
 <!-- CTA Section -->
-<section class="cta">
-  <div class="container">
-    <div class="cta-content">
-      <h2 class="cta-title">¿Tienes un proyecto en mente?</h2>
-      <p class="cta-description">
-        Estoy disponible para nuevos desafíos y oportunidades de colaboración.
-        ¡Hablemos sobre tu próximo proyecto!
-      </p>
-      <a routerLink="/contact" class="btn btn-primary btn-large">
-        <i class="icon icon-mail"></i>
-        Trabajemos juntos
-      </a>
+<section class="cta py-5 bg-primary text-white position-relative overflow-hidden">
+  <div class="cta-bg position-absolute w-100 h-100"></div>
+  <div class="container position-relative">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 text-center" data-aos="zoom-in" data-aos-duration="800">
+        <div class="cta-content">
+          <h2 class="cta-title display-4 fw-bold mb-4">
+            ¿Tienes un proyecto en mente?
+          </h2>
+          <p class="cta-description lead mb-4 opacity-90">
+            Estoy disponible para nuevos desafíos y oportunidades de colaboración.
+            ¡Hablemos sobre tu próximo proyecto y hagámoslo realidad juntos!
+          </p>
+          <div class="cta-buttons d-flex flex-wrap justify-content-center gap-3 mb-4">
+            <a routerLink="/contact" class="btn btn-light btn-lg px-4 py-3 rounded-pill text-primary fw-semibold shadow">
+              <i class="fas fa-envelope me-2"></i>
+              Trabajemos juntos
+            </a>
+            <a href="#" class="btn btn-outline-light btn-lg px-4 py-3 rounded-pill">
+              <i class="fas fa-phone me-2"></i>
+              Llamar ahora
+            </a>
+          </div>
+          <div class="cta-contact-info d-flex flex-wrap justify-content-center gap-4 small">
+            <div class="contact-item">
+              <i class="fas fa-envelope me-2"></i>
+              julianejemplo.com
+            </div>
+            <div class="contact-item">
+              <i class="fas fa-phone me-2"></i>
+              +57 123 456 7890
+            </div>
+            <div class="contact-item">
+              <i class="fas fa-map-marker-alt me-2"></i>
+              Manizales, Colombia
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>

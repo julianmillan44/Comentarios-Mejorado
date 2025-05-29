@@ -1,57 +1,61 @@
 // src/app/services/contact.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { ApiService } from './api.service';
 import { CreateContactDto, ContactMessage } from '../models/contact';
-import { ApiResponse, PaginatedResponse } from '../models/api-response';
+import { ApiResponse, PaginatedResponse } from '../models/contact';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ContactService {
-  private readonly apiUrl = `${environment.apiUrl}/contact`;
+  private readonly endpoint = 'contact';
 
-  constructor(private http: HttpClient) {}
+  constructor(private apiService: ApiService) {}
 
-  // Crear un nuevo mensaje de contacto
+  // Enviar mensaje de contacto
   createContact(contactData: CreateContactDto): Observable<ApiResponse<ContactMessage>> {
-    console.log('Sending contact data:', contactData);
-    return this.http.post<ApiResponse<ContactMessage>>(this.apiUrl, contactData);
+    console.log('ContactService: Sending contact data:', contactData);
+    return this.apiService.post<ApiResponse<ContactMessage>>(this.endpoint, contactData);
   }
 
-  // Obtener todos los mensajes (para admin)
-  getAllContacts(page: number = 1, limit: number = 10): Observable<PaginatedResponse<ContactMessage>> {
-    return this.http.get<PaginatedResponse<ContactMessage>>(`${this.apiUrl}?page=${page}&limit=${limit}`);
+  // Obtener todos los mensajes de contacto (para admin)
+  getContactMessages(page: number = 1, limit: number = 10): Observable<PaginatedResponse<ContactMessage>> {
+    return this.apiService.getPaginated<ContactMessage>(this.endpoint, page, limit);
   }
 
-  // Obtener mensajes no leídos
-  getUnreadContacts(): Observable<ApiResponse<ContactMessage[]>> {
-    return this.http.get<ApiResponse<ContactMessage[]>>(`${this.apiUrl}/unread`);
+  // Obtener mensajes no leídos (para admin)
+  getUnreadMessages(): Observable<ApiResponse<ContactMessage[]>> {
+    return this.apiService.get<ApiResponse<ContactMessage[]>>(`${this.endpoint}/unread`);
   }
 
-  // Obtener conteo de mensajes no leídos
-  getUnreadCount(): Observable<ApiResponse<{ count: number }>> {
-    return this.http.get<ApiResponse<{ count: number }>>(`${this.apiUrl}/unread/count`);
+  // Obtener un mensaje específico (para admin)
+  getContactMessage(id: string): Observable<ApiResponse<ContactMessage>> {
+    return this.apiService.get<ApiResponse<ContactMessage>>(`${this.endpoint}/${id}`);
   }
 
-  // Marcar mensaje como leído
+  // Marcar mensaje como leído (para admin)
   markAsRead(id: string): Observable<ApiResponse<ContactMessage>> {
-    return this.http.patch<ApiResponse<ContactMessage>>(`${this.apiUrl}/${id}/read`, {});
+    return this.apiService.patch<ApiResponse<ContactMessage>>(`${this.endpoint}/${id}/read`, {});
   }
 
-  // Buscar mensajes
-  searchContacts(term: string, page: number = 1, limit: number = 10): Observable<PaginatedResponse<ContactMessage>> {
-    return this.http.get<PaginatedResponse<ContactMessage>>(`${this.apiUrl}/search?q=${term}&page=${page}&limit=${limit}`);
+  // Marcar mensaje como no leído (para admin)
+  markAsUnread(id: string): Observable<ApiResponse<ContactMessage>> {
+    return this.apiService.patch<ApiResponse<ContactMessage>>(`${this.endpoint}/${id}/unread`, {});
   }
 
-  // Obtener por rango de fechas
-  getContactsByDateRange(startDate: string, endDate: string): Observable<ApiResponse<ContactMessage[]>> {
-    return this.http.get<ApiResponse<ContactMessage[]>>(`${this.apiUrl}/date-range?start=${startDate}&end=${endDate}`);
+  // Eliminar mensaje (para admin)
+  deleteContactMessage(id: string): Observable<ApiResponse<void>> {
+    return this.apiService.delete<ApiResponse<void>>(`${this.endpoint}/${id}`);
   }
 
-  // Eliminar mensaje
-  deleteContact(id: string): Observable<ApiResponse<void>> {
-    return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/${id}`);
+  // Obtener conteo de mensajes no leídos (para admin)
+  getUnreadCount(): Observable<ApiResponse<{ count: number }>> {
+    return this.apiService.get<ApiResponse<{ count: number }>>(`${this.endpoint}/unread/count`);
+  }
+
+  // Buscar mensajes (para admin)
+  searchMessages(term: string, page: number = 1, limit: number = 10): Observable<PaginatedResponse<ContactMessage>> {
+    return this.apiService.getPaginated<ContactMessage>(`${this.endpoint}/search`, page, limit, { q: term });
   }
 }
